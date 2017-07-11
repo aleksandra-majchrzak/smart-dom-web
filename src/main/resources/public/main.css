@@ -1,0 +1,18 @@
+.top-bar {
+    color: #FFB300;
+    background: #FFB300;
+    height: 100px;
+    padding-left: 50px;
+    position: relative;
+}
+
+.white-title {
+    color: white;
+    position: absolute;
+    bottom: 20px;
+}
+
+.center-form {
+    margin: 200px auto;
+    width: 300px;
+}
