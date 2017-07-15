@@ -1,3 +1,6 @@
+import database.DatabaseManager;
+import database.entities.User;
+import org.mongodb.morphia.query.Query;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
@@ -6,8 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static spark.Spark.get;
-import static spark.Spark.staticFileLocation;
+import static spark.Spark.*;
 
 /**
  * Created by Mohru on 15.07.2017.
@@ -31,5 +33,33 @@ public class WebApp {
 
             return new ModelAndView(model, "/public/index3.vm");
         }, new VelocityTemplateEngine());
+
+        post("/signIn", (request, response) -> {
+            String username = request.queryParams("username");
+            String password = request.queryParams("password");
+
+            System.out.println(request.body());
+
+            System.out.println("username: " + username);
+            System.out.println("password: " + password);
+
+            Query<User> userQuery = DatabaseManager.getDataStore().createQuery(User.class)
+                    .filter("login =", username);
+
+            List<User> users = userQuery.asList();
+
+            if (!users.isEmpty()) {
+                User user = users.get(0);
+                if (user.getPassword().equals(password)) {
+                    System.out.println("Login ok");
+                } else {
+                    System.out.println("Wrong password");
+                }
+            } else {
+                System.out.println("Username doesn't exist");
+            }
+
+            return "";
+        });
     }
 }
