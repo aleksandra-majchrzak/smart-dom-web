@@ -1,0 +1,16 @@
+<ul class="list-group">
+    #foreach($room in $rooms)
+        <a href="/rooms/$room.id" class="list-group-item">
+            <!-- tu musi byc jakos podawane id pokoju -->
+            <div>
+                <h4>${room.name}</h4>
+            </div>
+        </a>
+    #end
+
+    #if($roomCount == 0)
+        <br/>
+        <h3>No rooms added</h3>
+        <br/>
+    #end
+</ul>

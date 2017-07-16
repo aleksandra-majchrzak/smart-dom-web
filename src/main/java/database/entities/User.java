@@ -19,6 +19,9 @@ public class User {
     @Reference
     private List<Room> rooms;
 
+    public User() {
+    }
+
     public ObjectId getId() {
         return id;
     }

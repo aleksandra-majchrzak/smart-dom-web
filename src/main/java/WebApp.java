@@ -1,3 +1,5 @@
+import controllers.ModulesController;
+import controllers.RoomsController;
 import database.DatabaseManager;
 import database.entities.User;
 import org.mongodb.morphia.query.Query;
@@ -20,6 +22,11 @@ public class WebApp {
 
         // default port 4567
         staticFileLocation("/public");
+
+        get("/", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            return new ModelAndView(model, "/public/index.vm");
+        }, new VelocityTemplateEngine());
 
         get("/index3", (req, res) -> {
             Map<String, Object> model = new HashMap<String, Object>();
@@ -61,5 +68,30 @@ public class WebApp {
 
             return "";
         });
+
+        get("/rooms", RoomsController::getRooms,
+                new VelocityTemplateEngine());
+
+        post("/rooms", RoomsController::saveRoom,
+                new VelocityTemplateEngine());
+
+        get("/rooms/new", RoomsController::newRoom,
+                new VelocityTemplateEngine());
+
+        get("/rooms/:id", RoomsController::getRoom,
+                new VelocityTemplateEngine());
+
+
+        get("/modules", ModulesController::getModules,
+                new VelocityTemplateEngine());
+
+        post("/modules", ModulesController::saveModule,
+                new VelocityTemplateEngine());
+
+        get("/modules/new", ModulesController::newModule,
+                new VelocityTemplateEngine());
+
+        get("/modules/:id", ModulesController::getModule,
+                new VelocityTemplateEngine());
     }
 }

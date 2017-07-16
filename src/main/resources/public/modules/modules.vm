@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple page</title>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/main.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+    #parse("/public/navbar.vm")
+
+<div class="main-container">
+
+    <div class="container">
+        #parse("/public/reusable-panel.vm")
+
+    #if($room)
+        #parse("/public/modules/module-details.vm")
+    #elseif($addNewRoom)
+        #parse("/public/modules/add-module-panel.vm")
+    #end
+    </div>
+
+</div>
+
+</body>
+</html>

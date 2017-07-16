@@ -11,7 +11,12 @@ import org.mongodb.morphia.annotations.Id;
 public abstract class Module {
     @Id
     private ObjectId id;
+    private String name;
     private int port;
+
+    public Module(String name) {
+        this.name = name;
+    }
 
     public ObjectId getId() {
         return id;

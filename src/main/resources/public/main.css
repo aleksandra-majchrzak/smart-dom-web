@@ -4,6 +4,7 @@
     height: 100px;
     padding-left: 50px;
     position: relative;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 .white-title {
@@ -15,4 +16,18 @@
 .center-form {
     margin: 200px auto;
     width: 300px;
+}
+
+.main-container {
+    padding: 70px;
+}
+
+.edit-buttons {
+    float: right;
+    display: inline-block;
+}
+
+.smart-panel {
+    padding-left: 0;
+    padding-right: 0;
 }

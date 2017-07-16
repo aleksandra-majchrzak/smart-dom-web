@@ -1,0 +1,21 @@
+<div class="panel panel-default col-lg-6 col-md-offset-1 smart-panel">
+    <!-- Default panel contents -->
+
+    <div class="panel-heading">
+        <h1>
+            New room
+        </h1>
+    </div>
+
+    <form role="form" method="post" action="/rooms" style="max-width: 300px;">
+        <div class="form-group">
+            <input type="text" name="name" id="name" placeholder="Room name" class="form-control"/>
+        </div>
+        <button type="submit" class="btn btn-default save-button" aria-label="Left Align">
+            <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+        </button>
+        &nbsp;
+
+    </form>
+
+</div>

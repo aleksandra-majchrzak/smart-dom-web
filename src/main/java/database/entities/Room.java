@@ -14,11 +14,19 @@ import java.util.List;
 public class Room {
     @Id
     private ObjectId id;
+
     private String name;
     @Reference
     private List<Module> modules;
     @Reference
     private List<User> users;
+
+    public Room() {
+    }
+
+    public Room(String name) {
+        this.name = name;
+    }
 
     public ObjectId getId() {
         return id;

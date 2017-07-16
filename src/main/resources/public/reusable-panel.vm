@@ -1,0 +1,21 @@
+<div class="panel panel-default col-lg-4 smart-panel">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+        <h1>
+            $panelName
+        #if( $rooms )
+            #include("/public/buttons/add-room-button.vm")
+        #elseif ( $modules )
+            #include("/public/buttons/add-module-button.vm")
+        #end
+        </h1>
+
+    </div>
+
+    <!-- List group -->
+    #if($rooms)
+        #parse("/public/rooms/rooms-list.vm")
+    #elseif($modules)
+        #parse("/public/modules/modules-list.vm")
+    #end
+</div>
