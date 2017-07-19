@@ -31,3 +31,8 @@
     padding-left: 0;
     padding-right: 0;
 }
+
+#popUpDiv {
+    float: left;
+    display: inline-block;
+}

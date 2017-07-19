@@ -2,16 +2,14 @@ package controllers;
 
 import database.DatabaseManager;
 import database.entities.Room;
+import database.entities.User;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.query.Query;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Mohru on 16.07.2017.
@@ -77,6 +75,90 @@ public class RoomsController {
 
         if (room != null) {
             model.put("room", room);
+            model.put("users", DatabaseManager.getDataStore().find(User.class).asList());
+            model.put("roomUsers", DatabaseManager.getDataStore().find(User.class).filter("_id in ", room.getUserIds()).asList());
+        }
+
+        return modelAndView;
+    }
+
+    public static ModelAndView editRoom(Request req, Response res) {
+        ModelAndView modelAndView = getRooms(req, res);
+        HashMap<String, Object> model = (HashMap<String, Object>) modelAndView.getModel();
+
+        String id = req.params(":id");
+        Room room = DatabaseManager.getDataStore().get(Room.class, new ObjectId(id));
+
+        if (room != null) {
+            model.put("room", room);
+            model.put("users", DatabaseManager.getDataStore().find(User.class).asList());
+        }
+
+        return modelAndView;
+    }
+
+    public static ModelAndView addUser(Request req, Response res) {
+        ModelAndView modelAndView = getRoom(req, res);
+        HashMap<String, Object> model = (HashMap<String, Object>) modelAndView.getModel();
+
+        String userToAddId = req.queryParams("userToAddId");
+        Room room = (Room) model.get("room");
+
+        Optional<ObjectId> optUser = room.getUserIds()
+                .stream()
+                .filter(id -> id.toHexString().equals(userToAddId))
+                .findAny();
+
+        if (!optUser.isPresent()) {
+            User user = DatabaseManager.getDataStore().get(User.class, new ObjectId(userToAddId));
+            room.getUserIds().add(new ObjectId(userToAddId));
+
+            DatabaseManager.getDataStore().save(room);
+            List<User> roomUsers = (List<User>) model.get("roomUsers");
+            roomUsers.add(user);
+
+            List<Room> userRooms = user.getRooms();
+
+            if (userRooms.stream().filter(r -> r.getName().equals(room.getName())).count() == 0) {
+                userRooms.add(room);
+
+                DatabaseManager.getDataStore().save(user);
+                System.out.println("saved room");
+            }
+        }
+
+        return modelAndView;
+    }
+
+    public static ModelAndView removeUser(Request req, Response res) {
+        ModelAndView modelAndView = getRoom(req, res);
+        HashMap<String, Object> model = (HashMap<String, Object>) modelAndView.getModel();
+
+        String userToDeleteId = req.queryParams("userToDeleteId");
+        Room room = (Room) model.get("room");
+
+        Optional<ObjectId> optUser = room.getUserIds()
+                .stream()
+                .filter(id -> id.toHexString().equals(userToDeleteId))
+                .findAny();
+
+        if (optUser.isPresent()) {
+            room.getUserIds().remove(optUser.get());
+
+            DatabaseManager.getDataStore().save(room);
+            List<User> roomUsers = (List<User>) model.get("roomUsers");
+            roomUsers.removeIf(user -> user.getId().toHexString().equals(userToDeleteId));
+
+            User user = DatabaseManager.getDataStore().get(User.class, new ObjectId(userToDeleteId));
+            List<Room> userRooms = user.getRooms();
+
+            Optional<Room> optRoom = userRooms.stream().filter(r -> r.getName().equals(room.getName())).findAny();
+            if (optRoom.isPresent()) {
+                userRooms.remove(optRoom.get());
+
+                DatabaseManager.getDataStore().save(user);
+                System.out.println("removed room");
+            }
         }
 
         return modelAndView;

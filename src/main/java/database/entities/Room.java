@@ -5,6 +5,7 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,9 +18,8 @@ public class Room {
 
     private String name;
     @Reference
-    private List<Module> modules;
-    @Reference
-    private List<User> users;
+    private List<Module> modules = new ArrayList<>();
+    private List<ObjectId> userIds = new ArrayList<>();
 
     public Room() {
     }
@@ -52,11 +52,11 @@ public class Room {
         this.modules = modules;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<ObjectId> getUserIds() {
+        return userIds;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setUserIds(List<ObjectId> userIds) {
+        this.userIds = userIds;
     }
 }

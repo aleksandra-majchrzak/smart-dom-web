@@ -1,5 +1,12 @@
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import database.DatabaseManager;
+import database.entities.Room;
+import org.mongodb.morphia.query.Query;
 import serverEntities.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
@@ -28,6 +35,33 @@ public class MobileAPI {
             String token = "abcdefg";
 
             return gson.toJson(new LoginResponse(user.getLogin(), token), LoginResponse.class);
+        });
+
+        //*****  ROOMS  ******
+        get(baseURL + "/rooms", (request, response) -> {
+            Gson gson = new Gson();
+
+            String authenToken = request.headers("Authorization");
+            String login = request.queryParams("login");
+
+            // todo autentykacja
+
+            Query<database.entities.User> userQuery = DatabaseManager.getDataStore()
+                    .find(database.entities.User.class)
+                    .field("login")
+                    .equal(login);
+
+            List<database.entities.User> userList = userQuery.asList();
+
+            if (!userList.isEmpty()) {
+                return gson.toJson(userList.get(0).getRooms(),
+                        new TypeToken<List<Room>>() {
+                        }.getType());
+            } else
+                return gson.toJson(new ArrayList<Room>(),
+                        new TypeToken<List<Room>>() {
+                        }.getType());
+
         });
 
 

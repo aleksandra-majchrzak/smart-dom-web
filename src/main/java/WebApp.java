@@ -81,6 +81,15 @@ public class WebApp {
         get("/rooms/:id", RoomsController::getRoom,
                 new VelocityTemplateEngine());
 
+        get("/rooms/:id/edit", RoomsController::editRoom,
+                new VelocityTemplateEngine());
+
+        post("/rooms/:id/edit/users", RoomsController::addUser,
+                new VelocityTemplateEngine());
+
+        post("/rooms/:id/edit/users/delete", RoomsController::removeUser,
+                new VelocityTemplateEngine());
+
 
         get("/modules", ModulesController::getModules,
                 new VelocityTemplateEngine());
