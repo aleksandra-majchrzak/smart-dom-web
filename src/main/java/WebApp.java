@@ -1,14 +1,10 @@
 import controllers.ModulesController;
 import controllers.RoomsController;
-import database.DatabaseManager;
-import database.entities.User;
-import org.mongodb.morphia.query.Query;
+import controllers.UserController;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static spark.Spark.*;
@@ -28,47 +24,23 @@ public class WebApp {
             return new ModelAndView(model, "/public/index.vm");
         }, new VelocityTemplateEngine());
 
-        get("/index3", (req, res) -> {
-            Map<String, Object> model = new HashMap<String, Object>();
-            model.put("test", "Hey there :)");
 
-            List<Row> rows = new ArrayList<Row>();
-            rows.add(new Row("text1"));
-            rows.add(new Row("text2"));
-            rows.add(new Row("text3"));
-            model.put("rows", rows);
-
-            return new ModelAndView(model, "/public/index3.vm");
+        //***************  USER  ***************
+        get("/register", (request, response) -> {
+            Map<String, Object> model = new HashMap<>();
+            return new ModelAndView(model, "/public/register.vm");
         }, new VelocityTemplateEngine());
 
-        post("/signIn", (request, response) -> {
-            String username = request.queryParams("username");
-            String password = request.queryParams("password");
+        post("/register", UserController::register,
+                new VelocityTemplateEngine());
 
-            System.out.println(request.body());
+        post("/signIn", UserController::signIn,
+                new VelocityTemplateEngine());
 
-            System.out.println("username: " + username);
-            System.out.println("password: " + password);
+        get("/logOut", UserController::logOut);
 
-            Query<User> userQuery = DatabaseManager.getDataStore().createQuery(User.class)
-                    .filter("login =", username);
 
-            List<User> users = userQuery.asList();
-
-            if (!users.isEmpty()) {
-                User user = users.get(0);
-                if (user.getPassword().equals(password)) {
-                    System.out.println("Login ok");
-                } else {
-                    System.out.println("Wrong password");
-                }
-            } else {
-                System.out.println("Username doesn't exist");
-            }
-
-            return "";
-        });
-
+        //***************  ROOMS  ***************
         get("/rooms", RoomsController::getRooms,
                 new VelocityTemplateEngine());
 
@@ -91,6 +63,7 @@ public class WebApp {
                 new VelocityTemplateEngine());
 
 
+        //***************  MODULES  ***************
         get("/modules", ModulesController::getModules,
                 new VelocityTemplateEngine());
 

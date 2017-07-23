@@ -36,3 +36,15 @@
     float: left;
     display: inline-block;
 }
+
+.alert {
+    width: 500px;
+}
+
+#navbar-user-panel {
+    color: white;
+    display: block;
+    right: 50px;
+    position: absolute;
+    bottom: 20px
+}

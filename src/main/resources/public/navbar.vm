@@ -1,3 +1,10 @@
 <div class="top-bar">
     <h1 class="white-title">Smart Dom</h1>
+
+    #if($currentUsername)
+        <div id="navbar-user-panel">
+            <h4>Witaj, $currentUsername</h4>
+            <h4><a href="/logOut">Wyloguj</a></h4>
+        </div>
+    #end
 </div>

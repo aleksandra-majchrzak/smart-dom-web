@@ -8,9 +8,16 @@
 </head>
 <body>
 
-    #include("/public/navbar.vm")
+    #parse("/public/navbar.vm")
 
 <div class="main-container">
+
+    #if($error)
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span>$error</span>
+        </div>
+    #end
 
     <div class="center-form">
         <form role="form" method="post" action="/signIn" style="max-width: 300px;">
@@ -20,11 +27,11 @@
             <div class="form-group">
                 <input type="password" name="password" id="password" placeholder="Hasło" class="form-control"/>
             </div>
-            <button type="submit" class="btn btn-default">Sign In</button>
+            <button type="submit" class="btn btn-default">Zaloguj</button>
             &nbsp;
 
         </form>
-        <h3>Do not have an account? <a href="/index3">Register</a></h3>
+        <h3>Nie masz konta? <a href="/register">Zarejestruj</a></h3>
     </div>
 
 </div>
