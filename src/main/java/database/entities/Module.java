@@ -1,5 +1,6 @@
 package database.entities;
 
+import enums.ModuleType;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -12,6 +13,7 @@ public abstract class Module {
     @Id
     private ObjectId id;
     private String name;
+    private ModuleType type;
     private int port;
 
     public Module(String name) {
@@ -32,5 +34,17 @@ public abstract class Module {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ModuleType getType() {
+        return type;
+    }
+
+    public void setType(ModuleType type) {
+        this.type = type;
     }
 }

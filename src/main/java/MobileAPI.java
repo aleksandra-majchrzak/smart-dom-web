@@ -1,7 +1,6 @@
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import database.DatabaseManager;
-import database.entities.Room;
 import org.mongodb.morphia.query.Query;
 import serverEntities.*;
 
@@ -52,14 +51,16 @@ public class MobileAPI {
                     .equal(login);
 
             List<database.entities.User> userList = userQuery.asList();
+            List<RoomResponse> rooms = new ArrayList<>();
 
             if (!userList.isEmpty()) {
-                return gson.toJson(userList.get(0).getRooms(),
-                        new TypeToken<List<Room>>() {
+                userList.get(0).getRooms().forEach(room -> rooms.add(new RoomResponse(room)));
+                return gson.toJson(rooms,
+                        new TypeToken<List<RoomResponse>>() {
                         }.getType());
             } else
-                return gson.toJson(new ArrayList<Room>(),
-                        new TypeToken<List<Room>>() {
+                return gson.toJson(rooms,
+                        new TypeToken<List<RoomResponse>>() {
                         }.getType());
 
         });
