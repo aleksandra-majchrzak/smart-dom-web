@@ -4,21 +4,6 @@ import controllers.UserController;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,88 +23,64 @@ public class WebApp {
 
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            return new ModelAndView(model, "/public/index.vm");
-        }, new VelocityTemplateEngine());
+            return render(new ModelAndView(model, "/public/index.vm"));
+        });
 
 
         //***************  USER  ***************
         get("/register", (request, response) -> {
             Map<String, Object> model = new HashMap<>();
-            return new ModelAndView(model, "/public/register.vm");
-        }, new VelocityTemplateEngine());
+            return render(new ModelAndView(model, "/public/register.vm"));
+        });
 
-        post("/register", UserController::register,
-                new VelocityTemplateEngine());
+        post("/register", (request, response) ->
+                render(UserController.register(request, response)));
 
-        post("/signIn", UserController::signIn,
-                new VelocityTemplateEngine());
+        post("/signIn", (request, response) ->
+                render(UserController.signIn(request, response)));
 
-        get("/logOut", UserController::logOut);
+        get("/logOut", (request, response) ->
+                render(UserController.logOut(request, response)));
 
 
         //***************  ROOMS  ***************
-        get("/rooms", RoomsController::getRooms,
-                new VelocityTemplateEngine());
+        get("/rooms", (request, response) ->
+                render(RoomsController.getRooms(request, response)));
 
-        post("/rooms", RoomsController::saveRoom,
-                new VelocityTemplateEngine());
+        post("/rooms", (request, response) ->
+                render(RoomsController.saveRoom(request, response)));
 
-        get("/rooms/new", RoomsController::newRoom,
-                new VelocityTemplateEngine());
+        get("/rooms/new", (request, response) ->
+                render(RoomsController.newRoom(request, response)));
 
-        get("/rooms/:id", RoomsController::getRoom,
-                new VelocityTemplateEngine());
+        get("/rooms/:id", (request, response) ->
+                render(RoomsController.getRoom(request, response)));
 
-        get("/rooms/:id/edit", RoomsController::editRoom,
-                new VelocityTemplateEngine());
+        get("/rooms/:id/edit", (request, response) ->
+                render(RoomsController.editRoom(request, response)));
 
-        post("/rooms/:id/edit/users", RoomsController::addUser,
-                new VelocityTemplateEngine());
+        post("/rooms/:id/edit/users", (request, response) ->
+                render(RoomsController.addUser(request, response)));
 
-        post("/rooms/:id/edit/users/delete", RoomsController::removeUser,
-                new VelocityTemplateEngine());
+        post("/rooms/:id/edit/users/delete", (request, response) ->
+                render(RoomsController.removeUser(request, response)));
 
 
         //***************  MODULES  ***************
-        get("/modules", ModulesController::getModules,
-                new VelocityTemplateEngine());
+        get("/modules", (request, response) ->
+                render(ModulesController.getModules(request, response)));
 
-        post("/modules", ModulesController::saveModule,
-                new VelocityTemplateEngine());
+        post("/modules", (request, response) ->
+                render(ModulesController.saveModule(request, response)));
 
-        get("/modules/new", ModulesController::newModule,
-                new VelocityTemplateEngine());
+        get("/modules/new", (request, response) ->
+                render(ModulesController.newModule(request, response)));
 
-        get("/modules/:id", ModulesController::getModule,
-                new VelocityTemplateEngine());
+        get("/modules/:id", (request, response) ->
+                render(ModulesController.getModule(request, response)));
     }
 
-    private TrustManager initTrustManager() {
-        try {
-            CertificateFactory factory = CertificateFactory.getInstance("X.509");   // jedyny dosteny typ into: https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html
-            InputStream certInput = new BufferedInputStream(new FileInputStream(Constants.CERTIFICATE_PATH));
-            Certificate cert = factory.generateCertificate(certInput);
-
-            String keyStoreType = KeyStore.getDefaultType();
-            KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-            keyStore.load(null, null);
-            keyStore.setCertificateEntry("ca", cert);
-
-            String trustManagerAlg = TrustManagerFactory.getDefaultAlgorithm();
-            TrustManagerFactory trustFactory = TrustManagerFactory.getInstance(trustManagerAlg);
-            trustFactory.init(keyStore);
-
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustFactory.getTrustManagers(), null);
-
-            TrustManager[] trustManagers = trustFactory.getTrustManagers();
-            if (trustManagers.length == 1 && (trustManagers[0] instanceof X509TrustManager))
-                return trustManagers[0];
-
-        } catch (CertificateException | NoSuchAlgorithmException | KeyManagementException | KeyStoreException | IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    private static String render(ModelAndView modelAndView) {
+        return new VelocityTemplateEngine().render(modelAndView);
     }
 }
