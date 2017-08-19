@@ -13,4 +13,8 @@ public class Light extends Module {
         super(serverId);
         this.rgb = rgb;
     }
+
+    public Map<String, Integer> getRgb() {
+        return rgb;
+    }
 }

@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import database.DatabaseManager;
 import io.jsonwebtoken.Jwts;
@@ -6,9 +7,15 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.mongodb.morphia.query.Query;
 import serverEntities.*;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
@@ -86,6 +93,10 @@ public class MobileAPI {
             Light light = gson.fromJson(request.body(), Light.class);
             System.out.println("module id: " + light.getServerId());
 
+            String newURL = "http://192.168.0.52:80/turnOnLight";
+            HttpURLConnection connection = getPostConnection(newURL);
+            response.raw().setStatus(connection.getResponseCode());
+
             return gson.toJson(true, Boolean.class);
         });
 
@@ -94,6 +105,10 @@ public class MobileAPI {
             Light light = gson.fromJson(request.body(), Light.class);
             System.out.println("module id: " + light.getServerId());
 
+            String newURL = "http://192.168.0.52:80/turnOffLight";
+            HttpURLConnection connection = getPostConnection(newURL);
+            response.raw().setStatus(connection.getResponseCode());
+
             return gson.toJson(true, Boolean.class);
         });
 
@@ -101,6 +116,21 @@ public class MobileAPI {
             Gson gson = new Gson();
             Light light = gson.fromJson(request.body(), Light.class);
             System.out.println("module id: " + light.getServerId());
+
+            String newURL = "http://192.168.0.52:80/setStripColor";
+            HttpURLConnection connection = getPostConnection(newURL);
+            OutputStream output1 = connection.getOutputStream();
+
+            System.out.println(request.body());
+
+            Map<String, Integer> rgb = light.getRgb();
+            JsonObject obj = new JsonObject();
+            obj.addProperty("red", rgb.get("red"));
+            obj.addProperty("green", rgb.get("green"));
+            obj.addProperty("blue", rgb.get("blue"));
+            output1.write(obj.toString().getBytes());
+
+            response.raw().setStatus(connection.getResponseCode());
 
             return gson.toJson(true, Boolean.class);
         });
@@ -163,5 +193,19 @@ public class MobileAPI {
             result.isOpen = isOpen;
             return gson.toJson(result, DoorResponse.class);
         });
+    }
+
+    private static HttpURLConnection getPostConnection(String url) {
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Accept-Charset", StandardCharsets.UTF_8.name());
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + StandardCharsets.UTF_8.name());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return connection;
     }
 }
