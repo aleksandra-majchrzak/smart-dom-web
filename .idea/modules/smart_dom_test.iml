@@ -17,6 +17,7 @@
     <orderEntry type="library" name="Gradle: org.mongodb.morphia:morphia:1.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-simple:1.7.21" level="project" />
     <orderEntry type="library" name="Gradle: io.jsonwebtoken:jjwt:0.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jmdns:jmdns:3.5.2" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-server:9.4.4.v20170414" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-webapp:9.4.4.v20170414" level="project" />
