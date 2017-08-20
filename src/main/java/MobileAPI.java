@@ -135,6 +135,26 @@ public class MobileAPI {
             return gson.toJson(true, Boolean.class);
         });
 
+        post(baseURL + "/setStripBrightness", (request, response) -> {
+            Gson gson = new Gson();
+            Light light = gson.fromJson(request.body(), Light.class);
+            System.out.println("module id: " + light.getServerId());
+
+            String newURL = "http://192.168.0.52:80/setStripBrightness";
+            HttpURLConnection connection = getPostConnection(newURL);
+            OutputStream output1 = connection.getOutputStream();
+
+            System.out.println(request.body());
+
+            JsonObject obj = new JsonObject();
+            obj.addProperty("brightness", light.getBrightness());
+            output1.write(obj.toString().getBytes());
+
+            response.raw().setStatus(connection.getResponseCode());
+
+            return gson.toJson(true, Boolean.class);
+        });
+
 
         //*****  METEO  *****
         get(baseURL + "/meteo", (request, response) -> {
