@@ -213,6 +213,49 @@ public class MobileAPI {
             result.isOpen = isOpen;
             return gson.toJson(result, DoorResponse.class);
         });
+
+        //*****  BLIND  *****
+        post(baseURL + "/openBlind", (request, response) -> {
+            Gson gson = new Gson();
+
+            Blind blind = gson.fromJson(request.body(), Blind.class);
+            System.out.println("blind id: " + blind.getServerId());
+
+            System.out.println(request.body());
+
+            String newURL = "http://192.168.0.52:81/openBlind";
+            HttpURLConnection connection = getPostConnection(newURL);
+            OutputStream output1 = connection.getOutputStream();
+
+            JsonObject obj = new JsonObject();
+            obj.addProperty("start", blind.isShouldStart());
+            output1.write(obj.toString().getBytes());
+
+            response.raw().setStatus(connection.getResponseCode());
+
+            return gson.toJson(true, Boolean.class);
+        });
+
+        post(baseURL + "/closeBlind", (request, response) -> {
+            Gson gson = new Gson();
+
+            Blind blind = gson.fromJson(request.body(), Blind.class);
+            System.out.println("blind id: " + blind.getServerId());
+
+            System.out.println(request.body());
+
+            String newURL = "http://192.168.0.52:81/closeBlind";
+            HttpURLConnection connection = getPostConnection(newURL);
+            OutputStream output1 = connection.getOutputStream();
+
+            JsonObject obj = new JsonObject();
+            obj.addProperty("start", blind.isShouldStart());
+            output1.write(obj.toString().getBytes());
+
+            response.raw().setStatus(connection.getResponseCode());
+
+            return gson.toJson(true, Boolean.class);
+        });
     }
 
     private static HttpURLConnection getPostConnection(String url) {
