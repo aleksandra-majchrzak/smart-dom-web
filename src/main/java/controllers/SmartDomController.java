@@ -41,4 +41,14 @@ public class SmartDomController {
         Map<String, Object> model = new HashMap<>();
         return new ModelAndView(model, "/public/menu.vm");
     }
+
+    public static ModelAndView getNotFound(Request request, Response response) {
+        Map<String, Object> model = new HashMap<>();
+        return new ModelAndView(model, "/public/notFound.vm");
+    }
+
+    public static ModelAndView getServerError(Request request, Response response) {
+        Map<String, Object> model = new HashMap<>();
+        return new ModelAndView(model, "/public/serverError.vm");
+    }
 }

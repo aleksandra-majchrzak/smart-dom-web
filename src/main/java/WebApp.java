@@ -88,6 +88,15 @@ public class WebApp {
         get("/modules/:id", (request, response) ->
                 render(ModulesController.getModule(request, response)));
 
+
+        //***************  ERRORS  ***************
+        notFound((request, response) ->
+                render(SmartDomController.getNotFound(request, response)));
+
+        internalServerError((request, response) ->
+                render(SmartDomController.getServerError(request, response)));
+
+
         startJmDNS();
     }
 
