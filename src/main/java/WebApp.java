@@ -1,5 +1,6 @@
 import controllers.ModulesController;
 import controllers.RoomsController;
+import controllers.SmartDomController;
 import controllers.UserController;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
@@ -14,8 +15,6 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 
 import static spark.Spark.*;
 
@@ -31,18 +30,18 @@ public class WebApp {
         // default port 4567
         staticFileLocation("/public");
 
-        get("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            return render(new ModelAndView(model, "/public/index.vm"));
-        });
+        //***************  MAIN  ***************
+        get("/", (request, response) ->
+                render(SmartDomController.getMain(request, response)));
+
+        get("/menu", (request, response) ->
+                render(SmartDomController.getMenu(request, response)));
+
+        get("/register", (request, response) ->
+                render(SmartDomController.getRegister(request, response)));
 
 
         //***************  USER  ***************
-        get("/register", (request, response) -> {
-            Map<String, Object> model = new HashMap<>();
-            return render(new ModelAndView(model, "/public/register.vm"));
-        });
-
         post("/register", (request, response) ->
                 render(UserController.register(request, response)));
 

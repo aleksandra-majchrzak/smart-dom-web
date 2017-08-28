@@ -33,7 +33,8 @@ public class UserController {
                 request.session().attribute("currentUser", user);
                 model.put("currentUsername", user.getLogin());
 
-                return new ModelAndView(model, "/public/index.vm");
+                response.redirect("/menu");
+                return null;
             } else {
                 model.put("error", "Zły login lub hasło");
             }

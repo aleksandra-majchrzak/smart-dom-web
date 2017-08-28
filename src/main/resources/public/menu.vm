@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Dom</title>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/main.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+    #parse("/public/navbar.vm")
+
+<div class="main-container">
+
+    <div class="menu-center">
+        <div>
+            <a href="/rooms" class="edit-buttons">
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                    <h3>POKOJE</h3>
+                </button>
+            </a>
+        </div>
+        <div>
+            <a href="/modules" class="edit-buttons">
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                    <h3>MODULY</h3>
+                </button>
+            </a>
+        </div>
+        <div>
+            <a href="/users" class="edit-buttons">
+                <button type="button" class="btn btn-default" aria-label="Left Align">
+                    <h3>UZYTKOWNICY</h3>
+                </button>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

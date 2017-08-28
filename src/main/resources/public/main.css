@@ -14,12 +14,14 @@
 }
 
 .center-form {
-    margin: 200px auto;
     width: 300px;
 }
 
 .main-container {
     padding: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center
 }
 
 .edit-buttons {
@@ -47,4 +49,18 @@
     right: 50px;
     position: absolute;
     bottom: 20px
+}
+
+.menu-center button {
+    width: 300px;
+    height: 100px;
+    margin: 10px;
+    background-color: #FFB300;
+    border: none;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
 }
