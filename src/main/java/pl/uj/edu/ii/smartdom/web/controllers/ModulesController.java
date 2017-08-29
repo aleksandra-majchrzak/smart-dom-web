@@ -68,8 +68,13 @@ public class ModulesController {
                 String type = req.queryParams("type");
                 String roomId = req.queryParams("roomId");
                 Module module = new Module(moduleName, ModuleType.valueOf(type), port);
-                module.setRoom(DatabaseManager.getDataStore().get(Room.class, new ObjectId(roomId)));
+                Room room = DatabaseManager.getDataStore().get(Room.class, new ObjectId(roomId));
+                module.setRoom(room);
                 DatabaseManager.getDataStore().save(module);
+                if (room.getModules().stream().filter(m -> m.getName().equals(moduleName)).count() == 0) {
+                    room.getModules().add(module);
+                    DatabaseManager.getDataStore().save(room);
+                }
                 modelAndView = getModules(req, res);
             }
         } else {

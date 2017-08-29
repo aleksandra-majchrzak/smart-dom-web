@@ -94,7 +94,17 @@
             <ul class="list-group details-list-group">
                 <li class="list-group-item">
                     <h4>Modules</h4>
-                    <p>No added modules</p>
+                    #if($room.modules.size() == 0)
+                        <p>No added users</p>
+                    #else
+                        #foreach($module in $room.modules)
+                            <a href="/modules/$module.id">
+                                <button type="button" class="label label-default">
+                                    $module.name
+                                </button>
+                            </a>
+                        #end
+                    #end
                 </li>
             </ul>
         </div>
