@@ -1,6 +1,6 @@
 <ul class="list-group">
     #foreach($module in $modules)
-        <a href="/rooms/$module.id" class="list-group-item">
+        <a href="/modules/$module.id" class="list-group-item">
             <!-- tu musi byc jakos podawane id pokoju -->
             <div>
                 <h4>${module.name}</h4>

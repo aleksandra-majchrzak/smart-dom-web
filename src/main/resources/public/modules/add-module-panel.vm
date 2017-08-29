@@ -15,14 +15,14 @@
                 <input type="text" name="port" id="port" placeholder="Module port" class="form-control"/>
             </div>
             <div class="form-group">
-                <select name="name" id="type" placeholder="Module type" class="form-control">
-                    <option value="0">Swiatło</option>
-                    <option value="1">Rolety</option>
-                    <option value="2">Meteo</option>
+                <select name="type" id="type" placeholder="Module type" class="form-control">
+                    <option value="LIGHT_MODULE">Swiatło</option>
+                    <option value="BLIND_MOTOR_MODULE">Rolety</option>
+                    <option value="METEO_MODULE">Meteo</option>
                 </select>
             </div>
             <div class="form-group">
-                <select name="name" id="name" placeholder="Module room" class="form-control">
+                <select name="roomId" id="roomId" placeholder="Module room" class="form-control">
                     #foreach($room in $rooms)
                         <option value="$room.id">$room.name</option>
                     #end

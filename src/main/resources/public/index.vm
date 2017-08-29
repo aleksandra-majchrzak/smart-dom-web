@@ -12,11 +12,13 @@
 
 <div class="main-container">
 
-    #if($error)
-        <div class="alert alert-danger" role="alert">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span>$error</span>
-        </div>
+    #if($errors)
+        #foreach($error in $errors)
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span>$error</span>
+            </div>
+        #end
     #end
 
     <div class="center-form">

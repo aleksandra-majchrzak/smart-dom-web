@@ -23,8 +23,16 @@
         <div class=" col-lg-12">
             <ul class="list-group details-list-group">
                 <li class="list-group-item">
-                    <h4>Typ kontrahenta</h4>
-                    <p>jakis tekst</p>
+                    <h4>Port</h4>
+                    <p>$module.port</p>
+                </li>
+                <li class="list-group-item">
+                    <h4>Typ</h4>
+                    <p>$module.type.name</p>
+                </li>
+                <li class="list-group-item">
+                    <h4>Pokój</h4>
+                    <p>$module.room.name</p>
                 </li>
             </ul>
         </div>

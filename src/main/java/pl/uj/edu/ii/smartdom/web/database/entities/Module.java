@@ -1,23 +1,35 @@
 package pl.uj.edu.ii.smartdom.web.database.entities;
 
-import pl.uj.edu.ii.smartdom.web.enums.ModuleType;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Reference;
+import pl.uj.edu.ii.smartdom.web.enums.ModuleType;
 
 /**
  * Created by Mohru on 15.07.2017.
  */
 @Entity("modules")
-public abstract class Module {
+public class Module {
     @Id
     private ObjectId id;
     private String name;
     private ModuleType type;
     private int port;
+    @Reference
+    private Room room;
+
+    public Module() {
+    }
 
     public Module(String name) {
         this.name = name;
+    }
+
+    public Module(String name, ModuleType type, int port) {
+        this.name = name;
+        this.type = type;
+        this.port = port;
     }
 
     public ObjectId getId() {
@@ -46,5 +58,13 @@ public abstract class Module {
 
     public void setType(ModuleType type) {
         this.type = type;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 }

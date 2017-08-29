@@ -1,17 +1,22 @@
 package pl.uj.edu.ii.smartdom.web.controllers;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.query.Query;
 import pl.uj.edu.ii.smartdom.web.JmDNSManager;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
 import pl.uj.edu.ii.smartdom.web.database.entities.Module;
 import pl.uj.edu.ii.smartdom.web.database.entities.Room;
+import pl.uj.edu.ii.smartdom.web.enums.ModuleType;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Mohru on 16.07.2017.
@@ -21,7 +26,7 @@ public class ModulesController {
     public static ModelAndView getModules(Request req, Response res) {
         Map<String, Object> model = new HashMap<String, Object>();
 
-        List<Module> modules = new ArrayList<>();
+        List<Module> modules = DatabaseManager.getDataStore().find(Module.class).asList();
         model.put("panelName", "Modules");
         model.put("modules", modules);
         model.put("moduleCount", modules.size());
@@ -47,18 +52,24 @@ public class ModulesController {
 
         System.out.println(req.body());
 
-        Query<Room> roomQuery = DatabaseManager.getDataStore().find(Room.class, "name", moduleName);
+        Query<Module> ModuleQuery = DatabaseManager.getDataStore().find(Module.class, "name", moduleName);
 
         ModelAndView modelAndView = getModules(req, res);
         HashMap<String, Object> model = (HashMap<String, Object>) modelAndView.getModel();
 
-        if (roomQuery.asList().isEmpty()) {
+        if (ModuleQuery.asList().isEmpty()) {
 
             if (moduleName.isEmpty()) {
                 model.put("errors", Collections.singletonList("Module name cannot be empty."));
+            } else if (req.queryParams("port").isEmpty()) {
+                model.put("errors", Collections.singletonList("Module port cannot be empty."));
             } else {
-                DatabaseManager.getDataStore().save(new Module(moduleName) {
-                });
+                Integer port = Integer.valueOf(req.queryParams("port"));
+                String type = req.queryParams("type");
+                String roomId = req.queryParams("roomId");
+                Module module = new Module(moduleName, ModuleType.valueOf(type), port);
+                module.setRoom(DatabaseManager.getDataStore().get(Room.class, new ObjectId(roomId)));
+                DatabaseManager.getDataStore().save(module);
                 modelAndView = getModules(req, res);
             }
         } else {
@@ -72,7 +83,13 @@ public class ModulesController {
         ModelAndView modelAndView = getModules(req, res);
         HashMap<String, Object> model = (HashMap<String, Object>) modelAndView.getModel();
 
-        model.put("moduleId", 1);
+        String id = req.params(":id");
+        Module module = DatabaseManager.getDataStore().get(Module.class, new ObjectId(id));
+
+        if (module != null) {
+            model.put("module", module);
+            model.put("room", module.getRoom());
+        }
 
         return modelAndView;
     }

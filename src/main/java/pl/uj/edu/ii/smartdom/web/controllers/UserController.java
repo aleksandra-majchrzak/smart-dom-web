@@ -7,6 +7,7 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,10 +37,10 @@ public class UserController {
                 response.redirect("/menu");
                 return null;
             } else {
-                model.put("error", "Zły login lub hasło");
+                model.put("errors", Collections.singletonList("Zły login lub hasło"));
             }
         } else {
-            model.put("error", "Użytkownik nie istnieje");
+            model.put("errors", Collections.singletonList("Użytkownik nie istnieje"));
         }
 
         return new ModelAndView(model, "/public/index.vm");
@@ -66,10 +67,10 @@ public class UserController {
 
                 return new ModelAndView(model, "/public/register.vm");
             } else {
-                model.put("error", "Hasło i potwierdzenie nie są takie same");
+                model.put("errors", Collections.singletonList("Hasło i potwierdzenie nie są takie same"));
             }
         } else {
-            model.put("error", "Użytkownik o podanym loginie już istnieje");
+            model.put("errors", Collections.singletonList("Użytkownik o podanym loginie już istnieje"));
         }
 
         return new ModelAndView(model, "/public/register.vm");
