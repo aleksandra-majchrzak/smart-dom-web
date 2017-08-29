@@ -15,13 +15,25 @@
 
 .center-form {
     width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.center-form-big {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 20px;
 }
 
 .main-container {
     padding: 70px;
     display: flex;
     align-items: center;
-    justify-content: center
+    justify-content: center;
 }
 
 .edit-buttons {

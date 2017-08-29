@@ -13,9 +13,10 @@
     </div>
 
     <!-- List group -->
-    #if($rooms)
-        #parse("/public/rooms/rooms-list.vm")
-    #elseif($modules)
+
+    #if($modules)
         #parse("/public/modules/modules-list.vm")
+    #elseif($rooms)
+        #parse("/public/rooms/rooms-list.vm")
     #end
 </div>

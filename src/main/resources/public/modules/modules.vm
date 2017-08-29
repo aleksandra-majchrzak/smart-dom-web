@@ -15,9 +15,9 @@
     <div class="container">
         #parse("/public/reusable-panel.vm")
 
-    #if($room)
+    #if($module)
         #parse("/public/modules/module-details.vm")
-    #elseif($addNewRoom)
+    #elseif($addNewModule)
         #parse("/public/modules/add-module-panel.vm")
     #end
     </div>

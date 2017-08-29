@@ -10,7 +10,9 @@
 
     #if($roomCount == 0)
         <br/>
-        <h3>No rooms added</h3>
+        <div class="center-form-big">
+            <h3>No rooms added</h3>
+        </div>
         <br/>
     #end
 </ul>

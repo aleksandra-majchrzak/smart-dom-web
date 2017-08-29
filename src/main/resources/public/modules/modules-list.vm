@@ -1,0 +1,18 @@
+<ul class="list-group">
+    #foreach($module in $modules)
+        <a href="/rooms/$module.id" class="list-group-item">
+            <!-- tu musi byc jakos podawane id pokoju -->
+            <div>
+                <h4>${module.name}</h4>
+            </div>
+        </a>
+    #end
+
+    #if($moduleCount == 0)
+        <br/>
+        <div class="center-form-big">
+            <h3>No modules added</h3>
+        </div>
+        <br/>
+    #end
+</ul>

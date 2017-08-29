@@ -28,7 +28,7 @@ public class ModulesController {
 
         JmDNSManager.startJmDNS(serviceListener);
 
-        return new ModelAndView(model, "/public/rooms/rooms.vm");
+        return new ModelAndView(model, "/public/modules/modules.vm");
     }
 
     public static ModelAndView newModule(Request req, Response res) {
@@ -36,6 +36,8 @@ public class ModulesController {
         HashMap<String, Object> model = (HashMap<String, Object>) modelAndView.getModel();
 
         model.put("addNewModule", true);
+        List<Room> rooms = DatabaseManager.getDataStore().find(Room.class).asList();
+        model.put("rooms", rooms);
 
         return modelAndView;
     }
