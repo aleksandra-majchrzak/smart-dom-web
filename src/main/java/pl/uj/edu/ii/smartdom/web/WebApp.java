@@ -1,9 +1,12 @@
 package pl.uj.edu.ii.smartdom.web;
 
+import org.pac4j.core.config.Config;
+import org.pac4j.sparkjava.SecurityFilter;
 import pl.uj.edu.ii.smartdom.web.controllers.ModulesController;
 import pl.uj.edu.ii.smartdom.web.controllers.RoomsController;
 import pl.uj.edu.ii.smartdom.web.controllers.SmartDomController;
 import pl.uj.edu.ii.smartdom.web.controllers.UserController;
+import pl.uj.edu.ii.smartdom.web.security.SmartDomConfigFactory;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
@@ -86,6 +89,13 @@ public class WebApp {
 
         internalServerError((request, response) ->
                 render(SmartDomController.getServerError(request, response)));
+
+
+        final Config config = new SmartDomConfigFactory(new VelocityTemplateEngine()).build();
+
+        //todo posprawdzaj to jeszcze- jak to działa dla jakich sciezek
+        before(new SecurityFilter(config, "FormClient", "custom", "excludedMain,excludedRegister,excludedApi,excludedSignIn"));
+        before("/api/*", new SecurityFilter(config, "HeaderClient", "custom", "excludedLogin"));
     }
 
     private static String render(ModelAndView modelAndView) {
