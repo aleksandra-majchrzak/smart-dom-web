@@ -12,12 +12,12 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile "com.sparkjava:spark-core:2.6.0"
-    compile group: 'org.apache.velocity', name: 'velocity', version: '1.7'
     compile 'com.google.code.gson:gson:2.8.1'
     compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.4.2'
     compile 'org.mongodb.morphia:morphia:1.2.1'
     compile 'org.slf4j:slf4j-simple:1.7.21'
     compile 'io.jsonwebtoken:jjwt:0.7.0'
+    compile 'com.sparkjava:spark-template-velocity:2.5.5'
 
     compile 'org.jmdns:jmdns:3.5.2'
 }
