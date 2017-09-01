@@ -10,18 +10,18 @@ import pl.uj.edu.ii.smartdom.web.enums.ModuleType;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import spark.Session;
 
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Mohru on 16.07.2017.
  */
 public class ModulesController {
+
+    private static List<ServiceEvent> services = new ArrayList<>();
 
     public static ModelAndView getModules(Request req, Response res) {
         Map<String, Object> model = new HashMap<String, Object>();
@@ -31,6 +31,8 @@ public class ModulesController {
         model.put("panelName", "Modules");
         model.put("modules", modules);
         model.put("moduleCount", modules.size());
+        model.put("services", services);
+        model.put("serviceCount", services.size());
 
         JmDNSManager.startJmDNS(serviceListener);
 
@@ -109,11 +111,15 @@ public class ModulesController {
         @Override
         public void serviceRemoved(ServiceEvent event) {
             System.out.println("Service removed: " + event.getInfo());
+            Optional<ServiceEvent> oldEvent = services.stream().filter(e -> e.getInfo().hasSameAddresses(event.getInfo())).findAny();
+            oldEvent.ifPresent(serviceEvent -> services.remove(serviceEvent));
         }
 
         @Override
         public void serviceResolved(ServiceEvent event) {
             System.out.println("Service resolved: " + event.getInfo());
+            if (services.stream().filter(e -> e.getInfo().hasSameAddresses(event.getInfo())).count() == 0)
+                services.add(event);
         }
     };
 }

@@ -33,7 +33,17 @@
     #end
     </div>
 
+    <div id="found-modules" class="container">
+        #parse("/public/dnsModulesPanel.vm")
+    </div>
+
 </div>
 
 </body>
 </html>
+
+<script type="text/javascript">
+    setInterval(function () {
+        $("#found-modules").load("/modules #found-modules");
+    }, 3000);
+</script>

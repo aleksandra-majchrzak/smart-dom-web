@@ -1,0 +1,32 @@
+<div class="panel panel-default col-lg-4 smart-panel">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+        <h1>
+            DNS modules
+        </h1>
+
+    </div>
+
+    <!-- List group -->
+
+    <ul class="list-group">
+        #foreach($service in $services)
+            <a class="list-group-item">
+                <div>
+                    <h4>${service.name}</h4>
+                    <button type="button" class="label label-default">
+                        POLACZ
+                    </button>
+                </div>
+            </a>
+        #end
+
+        #if($serviceCount == 0)
+            <br/>
+            <div class="center-form-big">
+                <h3>Brak odnalezionych modułów</h3>
+            </div>
+            <br/>
+        #end
+    </ul>
+</div>
