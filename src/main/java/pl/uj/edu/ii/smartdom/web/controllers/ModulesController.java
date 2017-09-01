@@ -25,6 +25,7 @@ public class ModulesController {
 
     public static ModelAndView getModules(Request req, Response res) {
         Map<String, Object> model = new HashMap<String, Object>();
+        model.put("username", req.session().attribute("username"));
 
         List<Module> modules = DatabaseManager.getDataStore().find(Module.class).asList();
         model.put("panelName", "Modules");

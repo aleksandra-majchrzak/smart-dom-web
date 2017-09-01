@@ -7,6 +7,21 @@
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
+.top-bar a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.smart-navbar {
+    margin-top: 2px;
+}
+
+.top-container {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+}
+
 .white-title {
     color: white;
     position: absolute;

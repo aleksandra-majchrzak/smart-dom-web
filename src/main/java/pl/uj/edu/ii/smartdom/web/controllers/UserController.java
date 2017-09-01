@@ -1,5 +1,8 @@
 package pl.uj.edu.ii.smartdom.web.controllers;
 
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.mongodb.morphia.query.Query;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
 import pl.uj.edu.ii.smartdom.web.database.entities.User;
@@ -7,15 +10,18 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+import java.security.Key;
+import java.util.*;
 
 /**
  * Created by Mohru on 23.07.2017.
  */
 public class UserController {
+
+    byte[] bytes = {0, 1, 2};
+    private Key apiKey = new SecretKeySpec(bytes, "");
 
     public static ModelAndView signIn(Request request, Response response) {
         Map<String, Object> model = new HashMap<String, Object>();
@@ -31,7 +37,10 @@ public class UserController {
         if (!users.isEmpty()) {
             User user = users.get(0);
             if (user.getPassword().equals(password)) {
-                request.session().attribute("currentUser", user);
+
+                String token = createJWT(UUID.randomUUID().toString(), "smart_dom", user.getLogin());
+                response.cookie("auth_token", token);
+                request.session().attribute("username", user.getLogin());
                 model.put("currentUsername", user.getLogin());
 
                 response.redirect("/menu");
@@ -62,7 +71,7 @@ public class UserController {
             if (passwordConfirm.equals(password)) {
                 User user = new User(username, password);
                 DatabaseManager.getDataStore().save(user);
-                request.session().attribute("currentUser", user);
+                request.session().attribute("username", user.getLogin());
                 model.put("currentUsername", user.getLogin());
 
                 return new ModelAndView(model, "/public/register.vm");
@@ -78,7 +87,37 @@ public class UserController {
 
     public static ModelAndView logOut(Request request, Response response) {
         request.session(false).invalidate();
+        request.session().attribute("username", null);
         response.redirect("/");
         return null;
+    }
+
+    private static String createJWT(String id, String issuer, String subject) {
+//The JWT signature algorithm we will be using to sign the token
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+
+        long nowMillis = System.currentTimeMillis();
+        Date now = new Date(nowMillis);
+
+        //We will sign our JWT with our ApiKey secret
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary("someSecret");
+        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+
+        //Let's set the JWT Claims
+        JwtBuilder builder = Jwts.builder().setId(id)
+                .setIssuedAt(now)
+                .setSubject(subject)
+                .setIssuer(issuer)
+                .signWith(signatureAlgorithm, signingKey);
+
+        //if it has been specified, let's add the expiration
+        /*if (ttlMillis >= 0) {
+            long expMillis = nowMillis + ttlMillis;
+            Date exp = new Date(expMillis);
+            builder.setExpiration(exp);
+        }*/
+
+        //Builds the JWT and serializes it to a compact, URL-safe string
+        return builder.compact();
     }
 }

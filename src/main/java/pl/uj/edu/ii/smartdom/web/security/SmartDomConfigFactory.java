@@ -6,6 +6,7 @@ import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.matching.PathMatcher;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.util.CommonHelper;
+import org.pac4j.http.client.direct.DirectBasicAuthClient;
 import org.pac4j.http.client.direct.HeaderClient;
 import org.pac4j.http.client.indirect.FormClient;
 import spark.TemplateEngine;
@@ -24,6 +25,7 @@ public class SmartDomConfigFactory {
     public Config build() {
 
         final FormClient formClient = new FormClient("https://localhost:4567/", new SmartDomLoginPwdAuthenticator());
+        final DirectBasicAuthClient directBasicAuthClient = new DirectBasicAuthClient(new SmartDomLoginPwdAuthenticator());
 
         final HeaderClient headerClient = new HeaderClient("Authorization", (credentials, ctx) -> {
             final String token = ((TokenCredentials) credentials).getToken();
@@ -36,7 +38,7 @@ public class SmartDomConfigFactory {
         });
 
         // todo ten klient tez powinien byc chyba na podstawie tokenu- dlaczego profil uzytkownika sie nie zapisuje w sesji?
-        final Clients clients = new Clients("http://localhost:4567/", formClient, headerClient);
+        final Clients clients = new Clients("http://localhost:4567/", formClient, headerClient, directBasicAuthClient);
 
         final Config config = new Config(clients);
         config.addAuthorizer("custom", new SmartDomAuthorizer());

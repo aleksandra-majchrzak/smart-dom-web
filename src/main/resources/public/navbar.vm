@@ -1,10 +1,23 @@
-<div class="top-bar">
-    <h1 class="white-title">Smart Dom</h1>
-
-    #if($currentUsername)
-        <div id="navbar-user-panel">
-            <h4>Witaj, $currentUsername</h4>
-            <h4><a href="/logOut">Wyloguj</a></h4>
-        </div>
+<div>
+    <div class="top-bar">
+        <a href="/"><h1 class="white-title">Smart Dom</h1></a>
+    </div>
+    #if($username)
+        <nav class="navbar navbar-default navbar-static-top smart-navbar">
+            <div class="container top-container">
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
+                    <ul class="nav navbar-nav">
+                        <li id="menu-tab"><a href="/menu">Menu</a></li>
+                        <li id="rooms-tab"><a href="/rooms">Rooms</a></li>
+                        <li id="modules-tab"><a href="/modules">Modules</a></li>
+                        <li id="users-tab"><a href="/users">Users</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a>Witaj, $username</a></li>
+                        <li><a href="/logOut">Wyloguj</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     #end
 </div>
