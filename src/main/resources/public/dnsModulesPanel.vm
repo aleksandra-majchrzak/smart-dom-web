@@ -14,9 +14,20 @@
             <a class="list-group-item">
                 <div>
                     <h4>${service.name}</h4>
-                    <button type="button" class="label label-default">
-                        POLACZ
-                    </button>
+                    #if($service.connected)
+                        <span class="badge">
+                            POLACZONO
+                        </span>
+                    #else
+                        <form role="form" method="post" action="/modules">
+                            <input type="hidden" name="moduleToConnectName" id="moduleToConnectName"
+                                   value="$service.name"/>
+                            <button type="submit" class="btn btn-default" aria-label="Left Align">
+                                POLACZ
+                            </button>
+                            &nbsp;
+                        </form>
+                    #end
                 </div>
             </a>
         #end

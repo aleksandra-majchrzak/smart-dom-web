@@ -16,6 +16,7 @@ public class Module {
     private String name;
     private ModuleType type;
     private int port;
+    private String address;
     @Reference
     private Room room;
 
@@ -26,9 +27,10 @@ public class Module {
         this.name = name;
     }
 
-    public Module(String name, ModuleType type, int port) {
+    public Module(String name, ModuleType type, String address, int port) {
         this.name = name;
         this.type = type;
+        this.address = address;
         this.port = port;
     }
 
@@ -38,6 +40,10 @@ public class Module {
 
     public void setId(ObjectId id) {
         this.id = id;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public int getPort() {

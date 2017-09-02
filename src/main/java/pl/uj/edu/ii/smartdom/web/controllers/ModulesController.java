@@ -2,18 +2,24 @@ package pl.uj.edu.ii.smartdom.web.controllers;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.query.Query;
+import pl.uj.edu.ii.smartdom.web.Constants;
 import pl.uj.edu.ii.smartdom.web.JmDNSManager;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
 import pl.uj.edu.ii.smartdom.web.database.entities.Module;
 import pl.uj.edu.ii.smartdom.web.database.entities.Room;
 import pl.uj.edu.ii.smartdom.web.enums.ModuleType;
+import pl.uj.edu.ii.smartdom.web.utils.JmDNSService;
+import pl.uj.edu.ii.smartdom.web.utils.ModuleUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
-import spark.Session;
 
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.util.*;
 
 /**
@@ -21,7 +27,7 @@ import java.util.*;
  */
 public class ModulesController {
 
-    private static List<ServiceEvent> services = new ArrayList<>();
+    private static List<JmDNSService> services = new ArrayList<>();
 
     public static ModelAndView getModules(Request req, Response res) {
         Map<String, Object> model = new HashMap<String, Object>();
@@ -51,37 +57,45 @@ public class ModulesController {
     }
 
     public static ModelAndView saveModule(Request req, Response res) {
-        String moduleName = req.queryParams("name");
+        String moduleName = req.queryParams("moduleToConnectName");
+        String error = null;
+        Optional<JmDNSService> serviceOpt = services.stream().filter(s -> s.getName().equals(moduleName)).findFirst();
 
-        System.out.println(req.body());
+        if (serviceOpt.isPresent()) {
+            JmDNSService service = serviceOpt.get();
+            Module module = new Module(service.getName(),
+                    ModuleType.UNKNOWN,
+                    service.getAddress(),
+                    service.getPort());
 
-        Query<Module> ModuleQuery = DatabaseManager.getDataStore().find(Module.class, "name", moduleName);
+            if (DatabaseManager.getDataStore().find(Module.class, "name", service.getName()).countAll() == 0) {
+                //todo to powinno byc laczenie z modulem - pobieranie typu, ustawianie polaczenia
+
+                String newURL = ModuleUtils.getModuleRequestURL(module, "type");
+                HttpURLConnection connection = ModuleUtils.getGetConnection(newURL);
+                try {
+                    String type = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
+                    module.setType(ModuleType.valueOf(String.valueOf(type)));
+
+                    DatabaseManager.getDataStore().save(module);
+                    service.setConnected(true);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    error = "Nie można połaczyć z modułem.";
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                    error = "Nieznany rodzaj modułu.";
+                }
+            } else {
+                error = "Nie można połaczyć z modułem.";
+            }
+        }
 
         ModelAndView modelAndView = getModules(req, res);
-        HashMap<String, Object> model = (HashMap<String, Object>) modelAndView.getModel();
-
-        if (ModuleQuery.asList().isEmpty()) {
-
-            if (moduleName.isEmpty()) {
-                model.put("errors", Collections.singletonList("Module name cannot be empty."));
-            } else if (req.queryParams("port").isEmpty()) {
-                model.put("errors", Collections.singletonList("Module port cannot be empty."));
-            } else {
-                Integer port = Integer.valueOf(req.queryParams("port"));
-                String type = req.queryParams("type");
-                String roomId = req.queryParams("roomId");
-                Module module = new Module(moduleName, ModuleType.valueOf(type), port);
-                Room room = DatabaseManager.getDataStore().get(Room.class, new ObjectId(roomId));
-                module.setRoom(room);
-                DatabaseManager.getDataStore().save(module);
-                if (room.getModules().stream().filter(m -> m.getName().equals(moduleName)).count() == 0) {
-                    room.getModules().add(module);
-                    DatabaseManager.getDataStore().save(room);
-                }
-                modelAndView = getModules(req, res);
-            }
-        } else {
-            model.put("errors", Collections.singletonList("Module name already exists."));
+        if (error != null) {
+            HashMap<String, Object> model = (HashMap<String, Object>) modelAndView.getModel();
+            model.put("errors", Collections.singleton(error));
         }
 
         return modelAndView;
@@ -102,24 +116,58 @@ public class ModulesController {
         return modelAndView;
     }
 
+    public static ModelAndView deleteModule(Request req, Response res) {
+        String id = req.params(":id");
+        Module module = DatabaseManager.getDataStore().get(Module.class, new ObjectId(id));
+
+        if (module != null) {
+            DatabaseManager.getDataStore().delete(module);
+
+            services.stream().filter(s -> s.getName().equals(module.getName()))
+                    .findAny()
+                    .ifPresent(s -> s.setConnected(false));
+
+            if (module.getRoom() != null) {
+                Room room = DatabaseManager.getDataStore().get(Room.class, module.getRoom().getId());
+                room.getModules().removeIf(m -> m.getName().equals(module.getName()));
+                DatabaseManager.getDataStore().save(room);
+            }
+        }
+
+        res.redirect("/modules");
+        return null;
+    }
+
     private static ServiceListener serviceListener = new ServiceListener() {
         @Override
         public void serviceAdded(ServiceEvent event) {
-            System.out.println("Service added: " + event.getInfo());
+            //System.out.println("Service added: " + event.getInfo());
         }
 
         @Override
         public void serviceRemoved(ServiceEvent event) {
             System.out.println("Service removed: " + event.getInfo());
-            Optional<ServiceEvent> oldEvent = services.stream().filter(e -> e.getInfo().hasSameAddresses(event.getInfo())).findAny();
-            oldEvent.ifPresent(serviceEvent -> services.remove(serviceEvent));
+            services.stream().filter(s -> s.getName().equals(event.getName()))
+                    .findAny()
+                    .ifPresent(serviceEvent -> services.remove(serviceEvent));
         }
 
         @Override
         public void serviceResolved(ServiceEvent event) {
             System.out.println("Service resolved: " + event.getInfo());
-            if (services.stream().filter(e -> e.getInfo().hasSameAddresses(event.getInfo())).count() == 0)
-                services.add(event);
+
+            if (!event.getName().startsWith(Constants.SMART_DOM))
+                return;
+
+            if (services.stream().noneMatch(s -> s.getName().equals(event.getName()))) {
+                Query<Module> moduleQuery = DatabaseManager.getDataStore().find(Module.class, "name", event.getName());
+
+                JmDNSService newService = new JmDNSService(event.getName(),
+                        event.getInfo().getInet4Addresses()[0].getHostAddress(),
+                        event.getInfo().getPort(),
+                        moduleQuery.countAll() > 0);
+                services.add(newService);
+            }
         }
     };
 }

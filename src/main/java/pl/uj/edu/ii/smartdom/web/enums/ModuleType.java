@@ -4,7 +4,7 @@ package pl.uj.edu.ii.smartdom.web.enums;
  * Created by Mohru on 23.07.2017.
  */
 public enum ModuleType {
-    LIGHT_MODULE("LIGHT_MODULE"), BLIND_MOTOR_MODULE("BLIND_MOTOR_MODULE"), METEO_MODULE("METEO_MODULE");
+    LIGHT_MODULE("LIGHT_MODULE"), BLIND_MOTOR_MODULE("BLIND_MOTOR_MODULE"), METEO_MODULE("METEO_MODULE"), UNKNOWN("UNKNOWN");
 
     private String type;
 
@@ -25,7 +25,7 @@ public enum ModuleType {
             case METEO_MODULE:
                 return "Meteo";
             default:
-                return "Swiatło";
+                return "Nieznany";
         }
     }
 }

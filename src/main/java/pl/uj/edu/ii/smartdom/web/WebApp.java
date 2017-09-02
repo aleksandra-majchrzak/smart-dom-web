@@ -76,12 +76,14 @@ public class WebApp {
         post("/modules", (request, response) ->
                 render(ModulesController.saveModule(request, response)));
 
+        post("/modules/:id/delete", (request, response) ->
+                render(ModulesController.deleteModule(request, response)));
+
         get("/modules/new", (request, response) ->
                 render(ModulesController.newModule(request, response)));
 
         get("/modules/:id", (request, response) ->
                 render(ModulesController.getModule(request, response)));
-
 
         //***************  ERRORS  ***************
         notFound((request, response) ->
@@ -99,7 +101,10 @@ public class WebApp {
     }
 
     private static String render(ModelAndView modelAndView) {
-        return new VelocityTemplateEngine().render(modelAndView);
+        if (modelAndView != null)
+            return new VelocityTemplateEngine().render(modelAndView);
+        else
+            return null;
     }
 
 }

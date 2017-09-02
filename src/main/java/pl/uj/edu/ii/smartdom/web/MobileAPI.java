@@ -8,12 +8,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.mongodb.morphia.query.Query;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
 import pl.uj.edu.ii.smartdom.web.serverEntities.*;
+import pl.uj.edu.ii.smartdom.web.utils.ModuleUtils;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -95,8 +93,9 @@ public class MobileAPI {
             Light light = gson.fromJson(request.body(), Light.class);
             System.out.println("module id: " + light.getServerId());
 
-            String newURL = "http://192.168.0.52:80/turnOnLight";
-            HttpURLConnection connection = getPostConnection(newURL);
+            //String newURL = "http://192.168.0.52:80/turnOnLight";
+            String newURL = "http://192.168.0.248:80/turnOnLight";
+            HttpURLConnection connection = ModuleUtils.getPostConnection(newURL);
             response.raw().setStatus(connection.getResponseCode());
 
             return gson.toJson(true, Boolean.class);
@@ -107,8 +106,9 @@ public class MobileAPI {
             Light light = gson.fromJson(request.body(), Light.class);
             System.out.println("module id: " + light.getServerId());
 
-            String newURL = "http://192.168.0.52:80/turnOffLight";
-            HttpURLConnection connection = getPostConnection(newURL);
+            //String newURL = "http://192.168.0.52:80/turnOffLight";
+            String newURL = "http://192.168.0.248:80/turnOffLight";
+            HttpURLConnection connection = ModuleUtils.getPostConnection(newURL);
             response.raw().setStatus(connection.getResponseCode());
 
             return gson.toJson(true, Boolean.class);
@@ -119,8 +119,8 @@ public class MobileAPI {
             Light light = gson.fromJson(request.body(), Light.class);
             System.out.println("module id: " + light.getServerId());
 
-            String newURL = "http://192.168.0.52:80/setStripColor";
-            HttpURLConnection connection = getPostConnection(newURL);
+            String newURL = "http://192.168.0.248:80/setStripColor";
+            HttpURLConnection connection = ModuleUtils.getPostConnection(newURL);
             OutputStream output1 = connection.getOutputStream();
 
             System.out.println(request.body());
@@ -142,8 +142,8 @@ public class MobileAPI {
             Light light = gson.fromJson(request.body(), Light.class);
             System.out.println("module id: " + light.getServerId());
 
-            String newURL = "http://192.168.0.52:80/setStripBrightness";
-            HttpURLConnection connection = getPostConnection(newURL);
+            String newURL = "http://192.168.0.248:80/setStripBrightness";
+            HttpURLConnection connection = ModuleUtils.getPostConnection(newURL);
             OutputStream output1 = connection.getOutputStream();
 
             System.out.println(request.body());
@@ -226,7 +226,7 @@ public class MobileAPI {
             System.out.println(request.body());
 
             String newURL = "http://192.168.0.52:81/openBlind";
-            HttpURLConnection connection = getPostConnection(newURL);
+            HttpURLConnection connection = ModuleUtils.getPostConnection(newURL);
             OutputStream output1 = connection.getOutputStream();
 
             JsonObject obj = new JsonObject();
@@ -247,7 +247,7 @@ public class MobileAPI {
             System.out.println(request.body());
 
             String newURL = "http://192.168.0.52:81/closeBlind";
-            HttpURLConnection connection = getPostConnection(newURL);
+            HttpURLConnection connection = ModuleUtils.getPostConnection(newURL);
             OutputStream output1 = connection.getOutputStream();
 
             JsonObject obj = new JsonObject();
@@ -260,17 +260,5 @@ public class MobileAPI {
         });
     }
 
-    private static HttpURLConnection getPostConnection(String url) {
-        HttpURLConnection connection = null;
-        try {
-            connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Accept-Charset", StandardCharsets.UTF_8.name());
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + StandardCharsets.UTF_8.name());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return connection;
-    }
+
 }

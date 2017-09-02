@@ -5,8 +5,6 @@
             $panelName
         #if( $rooms )
             #include("/public/buttons/add-room-button.vm")
-        #elseif ( $modules )
-            #include("/public/buttons/add-module-button.vm")
         #end
         </h1>
 
