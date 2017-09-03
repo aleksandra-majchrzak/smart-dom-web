@@ -73,8 +73,8 @@ public class ModulesController {
 
                 String newURL = ModuleUtils.getModuleRequestURL(module, "type");
                 HttpURLConnection connection = ModuleUtils.getGetConnection(newURL);
-                try {
-                    String type = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                    String type = reader.readLine();
                     module.setType(ModuleType.valueOf(String.valueOf(type)));
 
                     DatabaseManager.getDataStore().save(module);
