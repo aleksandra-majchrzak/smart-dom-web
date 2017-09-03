@@ -28,6 +28,12 @@ public class SmartDomController {
                 model.put("errors", Collections.singleton("Musisz być zalogowany."));
         }
 
+        String info = request.session().attribute("info");
+        if (info != null) {
+            model.put("info", info);
+            request.session().removeAttribute("info");
+        }
+
         if (user != null) {
             response.redirect("/menu");
             return null;

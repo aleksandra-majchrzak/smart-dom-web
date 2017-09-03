@@ -8,4 +8,6 @@ public interface Constants {
     String KEYSTORE_PASS = "Smart_password1";
     String CERTIFICATE_PATH = "X509_certificate.cer";
     String SMART_DOM = "SmartDom";
+
+    String JWT_SECRET = "someSecret";
 }

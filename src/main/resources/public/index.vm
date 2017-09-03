@@ -21,6 +21,12 @@
         #end
     #end
 
+    #if($info)
+        <div class="alert alert-info" role="alert">
+            <span>$info</span>
+        </div>
+    #end
+
     <div class="center-form">
         <form role="form" method="post" action="/signIn" style="max-width: 300px;">
             <div class="form-group">

@@ -95,8 +95,7 @@ public class WebApp {
 
         final Config config = new SmartDomConfigFactory(new VelocityTemplateEngine()).build();
 
-        //todo posprawdzaj to jeszcze- jak to działa dla jakich sciezek
-        // before(new SecurityFilter(config, "DirectBasicAuthClient", "custom", "excludedMain,excludedRegister,excludedApi, excludedSignIn"));
+        before(new SecurityFilter(config, "CookieClient", "custom", "excludedMain,excludedRegister,excludedApi, excludedSignIn"));
         before("/api/*", new SecurityFilter(config, "HeaderClient", "custom", "excludedLogin"));
     }
 

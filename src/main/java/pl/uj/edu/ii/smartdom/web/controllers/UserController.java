@@ -1,17 +1,15 @@
 package pl.uj.edu.ii.smartdom.web.controllers;
 
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.mongodb.morphia.query.Query;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
 import pl.uj.edu.ii.smartdom.web.database.entities.User;
+import pl.uj.edu.ii.smartdom.web.utils.JwtUtils;
+import pl.uj.edu.ii.smartdom.web.utils.StringUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.*;
 
@@ -36,17 +34,22 @@ public class UserController {
 
         if (!users.isEmpty()) {
             User user = users.get(0);
-            if (user.getPassword().equals(password)) {
+            if (user.isConfirmed()) {
+                if (user.getPassword().equals(StringUtils.getHashString(password))) {
 
-                String token = createJWT(UUID.randomUUID().toString(), "smart_dom", user.getLogin());
-                response.cookie("auth_token", token);
-                request.session().attribute("username", user.getLogin());
-                model.put("currentUsername", user.getLogin());
+                    String token = JwtUtils.createJWT(UUID.randomUUID().toString(), "smart_dom", user.getLogin());
+                    response.cookie("auth_token", token, 600, true, true);
 
-                response.redirect("/menu");
-                return null;
+                    request.session().attribute("username", user.getLogin());
+                    model.put("currentUsername", user.getLogin());
+
+                    response.redirect("/menu");
+                    return null;
+                } else {
+                    model.put("errors", Collections.singletonList("Zły login lub hasło"));
+                }
             } else {
-                model.put("errors", Collections.singletonList("Zły login lub hasło"));
+                model.put("errors", Collections.singletonList("Użytkownik nie został jeszcze zatwierdzony przez admina."));
             }
         } else {
             model.put("errors", Collections.singletonList("Użytkownik nie istnieje"));
@@ -69,12 +72,12 @@ public class UserController {
 
         if (users.isEmpty()) {
             if (passwordConfirm.equals(password)) {
-                User user = new User(username, password);
+                User user = new User(username, StringUtils.getHashString(password));
                 DatabaseManager.getDataStore().save(user);
-                request.session().attribute("username", user.getLogin());
-                model.put("currentUsername", user.getLogin());
 
-                return new ModelAndView(model, "/public/register.vm");
+                request.session().attribute("info", "Twoje konto zostało zarejestrowane. Poczekaj na akceptację admina.");
+                response.redirect("/");
+                return null;
             } else {
                 model.put("errors", Collections.singletonList("Hasło i potwierdzenie nie są takie same"));
             }
@@ -88,36 +91,8 @@ public class UserController {
     public static ModelAndView logOut(Request request, Response response) {
         request.session(false).invalidate();
         request.session().attribute("username", null);
+        response.removeCookie("auth_token");
         response.redirect("/");
         return null;
-    }
-
-    private static String createJWT(String id, String issuer, String subject) {
-//The JWT signature algorithm we will be using to sign the token
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-
-        long nowMillis = System.currentTimeMillis();
-        Date now = new Date(nowMillis);
-
-        //We will sign our JWT with our ApiKey secret
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary("someSecret");
-        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
-
-        //Let's set the JWT Claims
-        JwtBuilder builder = Jwts.builder().setId(id)
-                .setIssuedAt(now)
-                .setSubject(subject)
-                .setIssuer(issuer)
-                .signWith(signatureAlgorithm, signingKey);
-
-        //if it has been specified, let's add the expiration
-        /*if (ttlMillis >= 0) {
-            long expMillis = nowMillis + ttlMillis;
-            Date exp = new Date(expMillis);
-            builder.setExpiration(exp);
-        }*/
-
-        //Builds the JWT and serializes it to a compact, URL-safe string
-        return builder.compact();
     }
 }

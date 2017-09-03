@@ -19,6 +19,8 @@ public class User {
     private String password;
     @Reference
     private List<Room> rooms = new ArrayList<>();
+    private boolean isConfirmed;
+    private boolean isAdmin;
 
     public User() {
     }
@@ -26,6 +28,15 @@ public class User {
     public User(String login, String password) {
         this.login = login;
         this.password = password;
+        this.isConfirmed = false;
+        this.isAdmin = false;
+    }
+
+    public User(String login, String password, boolean isConfirmed, boolean isAdmin) {
+        this.login = login;
+        this.password = password;
+        this.isConfirmed = isConfirmed;
+        this.isAdmin = isAdmin;
     }
 
     public User(String login, String password, List<Room> rooms) {
@@ -64,5 +75,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isConfirmed() {
+        return isConfirmed;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
     }
 }

@@ -1,11 +1,12 @@
 package pl.uj.edu.ii.smartdom.web.database;
 
 import com.mongodb.MongoClient;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Morphia;
 import pl.uj.edu.ii.smartdom.web.database.entities.Module;
 import pl.uj.edu.ii.smartdom.web.database.entities.Room;
 import pl.uj.edu.ii.smartdom.web.database.entities.User;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
+import pl.uj.edu.ii.smartdom.web.utils.StringUtils;
 
 /**
  * Created by Mohru on 15.07.2017.
@@ -30,9 +31,7 @@ public class DatabaseManager {
             initDatastore();
 
             if (datastore.getCount(User.class) == 0) {
-                User user = new User();
-                user.setLogin("Admin");
-                user.setPassword("ChangeThisPassword");
+                User user = new User("Admin", StringUtils.getHashString("ChangeThisPassword"), true, true);
                 datastore.save(user);
             }
 

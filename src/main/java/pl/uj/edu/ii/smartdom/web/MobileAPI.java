@@ -3,19 +3,18 @@ package pl.uj.edu.ii.smartdom.web;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.mongodb.morphia.query.Query;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
 import pl.uj.edu.ii.smartdom.web.serverEntities.*;
+import pl.uj.edu.ii.smartdom.web.utils.JwtUtils;
 import pl.uj.edu.ii.smartdom.web.utils.ModuleUtils;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
@@ -40,31 +39,15 @@ public class MobileAPI {
             System.out.println("username: " + user.getLogin());
             System.out.println("password: " + user.getPassword());
 
-            // znajdz narzedze do generowania tokenow ?? - ogolnie do autentykacji
-            String token = "abcdefg";
+            String jwt = JwtUtils.createJWT(UUID.randomUUID().toString(), "mobile", user.getLogin());
 
-            String jwt = Jwts.builder()
-                    .setSubject("users/TzMUocMF4p")
-                    .setExpiration(new Date(1300819380))
-                    .claim("name", "Robert Token Man")
-                    .claim("scope", "self groups/admins")
-                    .signWith(
-                            SignatureAlgorithm.HS256,
-                            "secret".getBytes("UTF-8")
-                    )
-                    .compact();
-
-            return gson.toJson(new LoginResponse(user.getLogin(), token), LoginResponse.class);
+            return gson.toJson(new LoginResponse(user.getLogin(), jwt), LoginResponse.class);
         });
 
         //*****  ROOMS  ******
         get(baseURL + "/rooms", (request, response) -> {
             Gson gson = new Gson();
-
-            String authenToken = request.headers("Authorization");
             String login = request.queryParams("login");
-
-            // todo autentykacja
 
             Query<pl.uj.edu.ii.smartdom.web.database.entities.User> userQuery = DatabaseManager.getDataStore()
                     .find(pl.uj.edu.ii.smartdom.web.database.entities.User.class)
