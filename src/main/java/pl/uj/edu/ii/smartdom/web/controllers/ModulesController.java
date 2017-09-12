@@ -138,6 +138,48 @@ public class ModulesController {
         return null;
     }
 
+    public static ModelAndView editModule(Request req, Response res) {
+        ModelAndView modelAndView = getModule(req, res);
+        HashMap<String, Object> model = (HashMap<String, Object>) modelAndView.getModel();
+
+
+        if (model.get("module") != null) {
+            model.put("editModule", true);
+            List<Room> rooms = DatabaseManager.getDataStore().find(Room.class).asList();
+            model.put("rooms", rooms);
+            rooms.forEach(r -> System.out.println(r.getId()));
+
+            return modelAndView;
+        }
+
+        res.redirect("/modules");
+        return null;
+    }
+
+    public static ModelAndView saveEditedModule(Request req, Response res) {
+        ModelAndView modelAndView = getModule(req, res);
+        HashMap<String, Object> model = (HashMap<String, Object>) modelAndView.getModel();
+
+        if (model.get("module") != null) {
+            Module editedModule = (Module) model.get("module");
+            String roomId = req.queryParams("roomId");
+            Room room = DatabaseManager.getDataStore().get(Room.class, new ObjectId(roomId));
+            if (room != null) {
+                editedModule.setRoom(room);
+                DatabaseManager.getDataStore().save(editedModule);
+                if (room.getModules().stream().noneMatch(m -> m.getId().equals(editedModule.getId()))) {
+                    room.getModules().add(editedModule);
+                    DatabaseManager.getDataStore().save(room);
+                }
+            }
+
+            return modelAndView;
+        }
+
+        res.redirect("/modules");
+        return null;
+    }
+
     private static ServiceListener serviceListener = new ServiceListener() {
         @Override
         public void serviceAdded(ServiceEvent event) {

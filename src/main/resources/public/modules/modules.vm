@@ -26,10 +26,12 @@
     <div class="container">
         #parse("/public/reusable-panel.vm")
 
-    #if($module)
-        #parse("/public/modules/module-details.vm")
+    #if($editModule)
+        #parse("/public/modules/edit-module-panel.vm")
     #elseif($addNewModule)
         #parse("/public/modules/add-module-panel.vm")
+    #elseif($module)
+        #parse("/public/modules/module-details.vm")
     #end
     </div>
 

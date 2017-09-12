@@ -85,6 +85,12 @@ public class WebApp {
         get("/modules/:id", (request, response) ->
                 render(ModulesController.getModule(request, response)));
 
+        get("/modules/:id/edit", (request, response) ->
+                render(ModulesController.editModule(request, response)));
+
+        post("/modules/:id/edit", (request, response) ->
+                render(ModulesController.saveEditedModule(request, response)));
+
         //***************  ERRORS  ***************
         notFound((request, response) ->
                 render(SmartDomController.getNotFound(request, response)));
