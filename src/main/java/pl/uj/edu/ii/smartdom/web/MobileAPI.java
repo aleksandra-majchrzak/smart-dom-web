@@ -3,8 +3,10 @@ package pl.uj.edu.ii.smartdom.web;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.query.Query;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
+import pl.uj.edu.ii.smartdom.web.database.entities.Module;
 import pl.uj.edu.ii.smartdom.web.serverEntities.*;
 import pl.uj.edu.ii.smartdom.web.utils.JwtUtils;
 import pl.uj.edu.ii.smartdom.web.utils.ModuleUtils;
@@ -76,11 +78,14 @@ public class MobileAPI {
             Light light = gson.fromJson(request.body(), Light.class);
             System.out.println("module id: " + light.getServerId());
 
-            //String newURL = "http://192.168.0.52:80/turnOnLight";
-            String newURL = "http://192.168.0.248:80/turnOnLight";
-            HttpURLConnection connection = ModuleUtils.getPostConnection(newURL);
-            response.raw().setStatus(connection.getResponseCode());
+            Module module = DatabaseManager.getDataStore().get(Module.class, new ObjectId(light.getServerId()));
 
+            if (module != null) {
+                HttpURLConnection connection = ModuleUtils.getPostConnection(module, "turnOnLight");
+                response.raw().setStatus(connection.getResponseCode());
+            } else {
+                response.raw().setStatus(404);
+            }
             return gson.toJson(true, Boolean.class);
         });
 
@@ -89,10 +94,14 @@ public class MobileAPI {
             Light light = gson.fromJson(request.body(), Light.class);
             System.out.println("module id: " + light.getServerId());
 
-            //String newURL = "http://192.168.0.52:80/turnOffLight";
-            String newURL = "http://192.168.0.248:80/turnOffLight";
-            HttpURLConnection connection = ModuleUtils.getPostConnection(newURL);
-            response.raw().setStatus(connection.getResponseCode());
+            Module module = DatabaseManager.getDataStore().get(Module.class, new ObjectId(light.getServerId()));
+
+            if (module != null) {
+                HttpURLConnection connection = ModuleUtils.getPostConnection(module, "turnOffLight");
+                response.raw().setStatus(connection.getResponseCode());
+            } else {
+                response.raw().setStatus(404);
+            }
 
             return gson.toJson(true, Boolean.class);
         });
@@ -102,20 +111,26 @@ public class MobileAPI {
             Light light = gson.fromJson(request.body(), Light.class);
             System.out.println("module id: " + light.getServerId());
 
-            String newURL = "http://192.168.0.248:80/setStripColor";
-            HttpURLConnection connection = ModuleUtils.getPostConnection(newURL);
-            OutputStream output1 = connection.getOutputStream();
+            Module module = DatabaseManager.getDataStore().get(Module.class, new ObjectId(light.getServerId()));
 
-            System.out.println(request.body());
+            if (module != null) {
+                HttpURLConnection connection = ModuleUtils.getPostConnection(module, "setStripColor");
+                OutputStream output1 = connection.getOutputStream();
 
-            Map<String, Integer> rgb = light.getRgb();
-            JsonObject obj = new JsonObject();
-            obj.addProperty("red", rgb.get("red"));
-            obj.addProperty("green", rgb.get("green"));
-            obj.addProperty("blue", rgb.get("blue"));
-            output1.write(obj.toString().getBytes());
+                System.out.println(request.body());
 
-            response.raw().setStatus(connection.getResponseCode());
+                Map<String, Integer> rgb = light.getRgb();
+                JsonObject obj = new JsonObject();
+                obj.addProperty("red", rgb.get("red"));
+                obj.addProperty("green", rgb.get("green"));
+                obj.addProperty("blue", rgb.get("blue"));
+                output1.write(obj.toString().getBytes());
+
+                response.raw().setStatus(connection.getResponseCode());
+            } else {
+                response.raw().setStatus(404);
+            }
+
 
             return gson.toJson(true, Boolean.class);
         });
@@ -125,18 +140,22 @@ public class MobileAPI {
             Light light = gson.fromJson(request.body(), Light.class);
             System.out.println("module id: " + light.getServerId());
 
-            String newURL = "http://192.168.0.248:80/setStripBrightness";
-            HttpURLConnection connection = ModuleUtils.getPostConnection(newURL);
-            OutputStream output1 = connection.getOutputStream();
+            Module module = DatabaseManager.getDataStore().get(Module.class, new ObjectId(light.getServerId()));
 
-            System.out.println(request.body());
+            if (module != null) {
+                HttpURLConnection connection = ModuleUtils.getPostConnection(module, "setStripBrightness");
+                OutputStream output1 = connection.getOutputStream();
 
-            JsonObject obj = new JsonObject();
-            obj.addProperty("brightness", light.getBrightness());
-            output1.write(obj.toString().getBytes());
+                System.out.println(request.body());
 
-            response.raw().setStatus(connection.getResponseCode());
+                JsonObject obj = new JsonObject();
+                obj.addProperty("brightness", light.getBrightness());
+                output1.write(obj.toString().getBytes());
 
+                response.raw().setStatus(connection.getResponseCode());
+            } else {
+                response.raw().setStatus(404);
+            }
             return gson.toJson(true, Boolean.class);
         });
 
@@ -208,16 +227,20 @@ public class MobileAPI {
 
             System.out.println(request.body());
 
-            String newURL = "http://192.168.0.52:81/openBlind";
-            HttpURLConnection connection = ModuleUtils.getPostConnection(newURL);
-            OutputStream output1 = connection.getOutputStream();
+            Module module = DatabaseManager.getDataStore().get(Module.class, new ObjectId(blind.getServerId()));
 
-            JsonObject obj = new JsonObject();
-            obj.addProperty("start", blind.isShouldStart());
-            output1.write(obj.toString().getBytes());
+            if (module != null) {
+                HttpURLConnection connection = ModuleUtils.getPostConnection(module, "openBlind");
+                OutputStream output1 = connection.getOutputStream();
 
-            response.raw().setStatus(connection.getResponseCode());
+                JsonObject obj = new JsonObject();
+                obj.addProperty("start", blind.isShouldStart());
+                output1.write(obj.toString().getBytes());
 
+                response.raw().setStatus(connection.getResponseCode());
+            } else {
+                response.raw().setStatus(404);
+            }
             return gson.toJson(true, Boolean.class);
         });
 
@@ -226,19 +249,22 @@ public class MobileAPI {
 
             Blind blind = gson.fromJson(request.body(), Blind.class);
             System.out.println("blind id: " + blind.getServerId());
-
             System.out.println(request.body());
 
-            String newURL = "http://192.168.0.52:81/closeBlind";
-            HttpURLConnection connection = ModuleUtils.getPostConnection(newURL);
-            OutputStream output1 = connection.getOutputStream();
+            Module module = DatabaseManager.getDataStore().get(Module.class, new ObjectId(blind.getServerId()));
 
-            JsonObject obj = new JsonObject();
-            obj.addProperty("start", blind.isShouldStart());
-            output1.write(obj.toString().getBytes());
+            if (module != null) {
+                HttpURLConnection connection = ModuleUtils.getPostConnection(module, "closeBlind");
+                OutputStream output1 = connection.getOutputStream();
 
-            response.raw().setStatus(connection.getResponseCode());
+                JsonObject obj = new JsonObject();
+                obj.addProperty("start", blind.isShouldStart());
+                output1.write(obj.toString().getBytes());
 
+                response.raw().setStatus(connection.getResponseCode());
+            } else {
+                response.raw().setStatus(404);
+            }
             return gson.toJson(true, Boolean.class);
         });
     }

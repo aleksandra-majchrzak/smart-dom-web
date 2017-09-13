@@ -69,10 +69,7 @@ public class ModulesController {
                     service.getPort());
 
             if (DatabaseManager.getDataStore().find(Module.class, "name", service.getName()).countAll() == 0) {
-                //todo to powinno byc laczenie z modulem - pobieranie typu, ustawianie polaczenia
-
-                String newURL = ModuleUtils.getModuleRequestURL(module, "type");
-                HttpURLConnection connection = ModuleUtils.getGetConnection(newURL);
+                HttpURLConnection connection = ModuleUtils.getGetConnection(module, "type");
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
                     String type = reader.readLine();
                     module.setType(ModuleType.valueOf(String.valueOf(type)));
@@ -141,7 +138,6 @@ public class ModulesController {
     public static ModelAndView editModule(Request req, Response res) {
         ModelAndView modelAndView = getModule(req, res);
         HashMap<String, Object> model = (HashMap<String, Object>) modelAndView.getModel();
-
 
         if (model.get("module") != null) {
             model.put("editModule", true);

@@ -12,10 +12,10 @@ import java.nio.charset.StandardCharsets;
  */
 public class ModuleUtils {
 
-    public static HttpURLConnection getPostConnection(String url) {
+    public static HttpURLConnection getPostConnection(Module module, String method) {
         HttpURLConnection connection = null;
         try {
-            connection = (HttpURLConnection) new URL(url).openConnection();
+            connection = (HttpURLConnection) new URL(getModuleRequestURL(module, method)).openConnection();
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
             connection.setRequestProperty("Accept-Charset", StandardCharsets.UTF_8.name());
@@ -26,10 +26,10 @@ public class ModuleUtils {
         return connection;
     }
 
-    public static HttpURLConnection getGetConnection(String url) {
+    public static HttpURLConnection getGetConnection(Module module, String method) {
         HttpURLConnection connection = null;
         try {
-            connection = (HttpURLConnection) new URL(url).openConnection();
+            connection = (HttpURLConnection) new URL(getModuleRequestURL(module, method)).openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept-Charset", StandardCharsets.UTF_8.name());
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + StandardCharsets.UTF_8.name());
