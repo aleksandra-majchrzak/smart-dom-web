@@ -8,9 +8,9 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
                     <ul class="nav navbar-nav">
                         <li id="menu-tab"><a href="/menu">Menu</a></li>
-                        <li id="rooms-tab"><a href="/rooms">Rooms</a></li>
-                        <li id="modules-tab"><a href="/modules">Modules</a></li>
-                        <li id="users-tab"><a href="/users">Users</a></li>
+                        <li id="rooms-tab"><a href="/rooms">Pokoje</a></li>
+                        <li id="modules-tab"><a href="/modules">Moduły</a></li>
+                        <li id="users-tab"><a href="/users">Użytkownicy</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a>Witaj, $username</a></li>

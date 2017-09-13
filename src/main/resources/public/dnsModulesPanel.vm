@@ -2,7 +2,7 @@
     <!-- Default panel contents -->
     <div class="panel-heading">
         <h1>
-            DNS modules
+            Moduły mDNS
         </h1>
 
     </div>
@@ -16,14 +16,14 @@
                     <h4>${service.name}</h4>
                     #if($service.connected)
                         <span class="badge">
-                            POLACZONO
+                            POŁĄCZONO
                         </span>
                     #else
                         <form role="form" method="post" action="/modules">
                             <input type="hidden" name="moduleToConnectName" id="moduleToConnectName"
                                    value="$service.name"/>
                             <button type="submit" class="btn btn-default" aria-label="Left Align">
-                                POLACZ
+                                POŁĄCZ
                             </button>
                             &nbsp;
                         </form>

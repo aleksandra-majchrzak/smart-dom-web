@@ -25,14 +25,14 @@
         <div>
             <a href="/modules" class="edit-buttons">
                 <button type="button" class="btn btn-default" aria-label="Left Align">
-                    <h3>MODULY</h3>
+                    <h3>MODUŁY</h3>
                 </button>
             </a>
         </div>
         <div>
             <a href="/users" class="edit-buttons">
                 <button type="button" class="btn btn-default" aria-label="Left Align">
-                    <h3>UZYTKOWNICY</h3>
+                    <h3>UŻYTKOWNICY</h3>
                 </button>
             </a>
         </div>

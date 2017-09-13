@@ -19,7 +19,7 @@ public enum ModuleType {
     public String getName() {
         switch (this) {
             case LIGHT_MODULE:
-                return "Swiatło";
+                return "Światło";
             case BLIND_MOTOR_MODULE:
                 return "Roleta";
             case METEO_MODULE:

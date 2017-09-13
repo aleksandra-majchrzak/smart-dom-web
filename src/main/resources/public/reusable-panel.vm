@@ -2,10 +2,12 @@
     <!-- Default panel contents -->
     <div class="panel-heading">
         <h1>
-            $panelName
-        #if( $rooms )
-            #include("/public/buttons/add-room-button.vm")
-        #end
+            #if($modules)
+                Moduły
+            #else
+                Pokoje
+                #include("/public/buttons/add-room-button.vm")
+            #end
         </h1>
 
     </div>

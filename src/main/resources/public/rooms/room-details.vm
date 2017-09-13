@@ -25,7 +25,7 @@
             <ul class="list-group details-list-group">
                 <li class="list-group-item">
 
-                    <h4>Users</h4>
+                    <h4>Użytkownicy</h4>
                     <form role="form" action="/rooms/$room.id/edit/users" method="post"
                           class="edit-buttons">
                         #if($users.size() > 0)
@@ -47,7 +47,7 @@
                     </div>
                     <br/>
                     #if($roomUsers.size() == 0)
-                        <p>No added users</p>
+                        <p>Brak dodanych modułów</p>
                     #else
                         #foreach($roomUser in $roomUsers)
                             <button type="button" class="label label-default" onclick="onUserClick('$roomUser.id')">
@@ -93,9 +93,9 @@
         <div class=" col-lg-12">
             <ul class="list-group details-list-group">
                 <li class="list-group-item">
-                    <h4>Modules</h4>
+                    <h4>Moduły</h4>
                     #if($room.modules.size() == 0)
-                        <p>No added users</p>
+                        <p>Brak dodanych użytkowników</p>
                     #else
                         #foreach($module in $room.modules)
                             <a href="/modules/$module.id">

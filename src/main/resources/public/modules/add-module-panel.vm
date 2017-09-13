@@ -3,7 +3,7 @@
 
     <div class="panel-heading ">
         <h1>
-            New module
+            Nowy moduł
         </h1>
     </div>
     <div class="center-form-big">
@@ -16,7 +16,7 @@
             </div>
             <div class="form-group">
                 <select name="type" id="type" placeholder="Module type" class="form-control">
-                    <option value="LIGHT_MODULE">Swiatło</option>
+                    <option value="LIGHT_MODULE">Światło</option>
                     <option value="BLIND_MOTOR_MODULE">Rolety</option>
                     <option value="METEO_MODULE">Meteo</option>
                 </select>
