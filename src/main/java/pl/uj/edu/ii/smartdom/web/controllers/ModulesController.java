@@ -1,6 +1,7 @@
 package pl.uj.edu.ii.smartdom.web.controllers;
 
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import pl.uj.edu.ii.smartdom.web.Constants;
 import pl.uj.edu.ii.smartdom.web.JmDNSManager;
@@ -125,9 +126,8 @@ public class ModulesController {
                     .ifPresent(s -> s.setConnected(false));
 
             if (module.getRoom() != null) {
-                Room room = DatabaseManager.getDataStore().get(Room.class, module.getRoom().getId());
-                room.getModules().removeIf(m -> m.getName().equals(module.getName()));
-                DatabaseManager.getDataStore().save(room);
+                Datastore ds = DatabaseManager.getDataStore();
+                ds.update(module.getRoom(), ds.createUpdateOperations(Room.class).removeAll("modules", module));
             }
         }
 
@@ -159,14 +159,15 @@ public class ModulesController {
         if (model.get("module") != null) {
             Module editedModule = (Module) model.get("module");
             String roomId = req.queryParams("roomId");
-            Room room = DatabaseManager.getDataStore().get(Room.class, new ObjectId(roomId));
+            Datastore ds = DatabaseManager.getDataStore();
+            Room room = ds.get(Room.class, new ObjectId(roomId));
+            if (editedModule.getRoom() != null) {
+                ds.update(editedModule.getRoom(), ds.createUpdateOperations(Room.class).removeAll("modules", editedModule));
+            }
             if (room != null) {
                 editedModule.setRoom(room);
-                DatabaseManager.getDataStore().save(editedModule);
-                if (room.getModules().stream().noneMatch(m -> m.getId().equals(editedModule.getId()))) {
-                    room.getModules().add(editedModule);
-                    DatabaseManager.getDataStore().save(room);
-                }
+                ds.save(editedModule);
+                ds.update(room, ds.createUpdateOperations(Room.class).add("modules", editedModule));
             }
 
             return modelAndView;

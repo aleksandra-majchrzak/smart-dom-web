@@ -94,7 +94,7 @@ public class WebApp {
         get("/modules/:id/edit", (request, response) ->
                 render(ModulesController.editModule(request, response)));
 
-        post("/modules/:id/edit", (request, response) ->
+        post("/modules/:id", (request, response) ->
                 render(ModulesController.saveEditedModule(request, response)));
 
         //***************  ERRORS  ***************

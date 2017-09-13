@@ -7,7 +7,7 @@
     </div>
     <div class="panel-body">
         <div class=" col-lg-12">
-            <form role="form" method="post" action="/modules/$module.id/edit">
+            <form role="form" method="post" action="/modules/$module.id">
                 <ul class="list-group details-list-group">
                     <li class="list-group-item">
                         <h4>Typ</h4>
