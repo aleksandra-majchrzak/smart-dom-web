@@ -59,6 +59,9 @@ public class WebApp {
         get("/rooms/:id", (request, response) ->
                 render(RoomsController.getRoom(request, response)));
 
+        post("/rooms/:id", (request, response) ->
+                render(RoomsController.saveEditedRoom(request, response)));
+
         get("/rooms/:id/edit", (request, response) ->
                 render(RoomsController.editRoom(request, response)));
 
@@ -67,6 +70,9 @@ public class WebApp {
 
         post("/rooms/:id/edit/users/delete", (request, response) ->
                 render(RoomsController.removeUser(request, response)));
+
+        post("/rooms/:id/delete", (request, response) ->
+                render(RoomsController.deleteRoom(request, response)));
 
 
         //***************  MODULES  ***************

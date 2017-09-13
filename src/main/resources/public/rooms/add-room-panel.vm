@@ -3,13 +3,26 @@
 
     <div class="panel-heading">
         <h1>
-            New room
+            #if($roomToEdit)
+                $roomToEdit.name
+            #else
+                New room
+            #end
         </h1>
     </div>
     <div class="center-form-big">
+        #if($addNewRoom)
         <form role="form" method="post" action="/rooms" style="max-width: 300px;">
+        #else
+        <form role="form" method="post" action="/rooms/$roomToEdit.id" style="max-width: 300px;">
+        #end
             <div class="form-group">
-                <input type="text" name="name" id="name" placeholder="Room name" class="form-control"/>
+                #if($roomToEdit)
+                    <input type="text" name="name" id="name" placeholder="Room name" value="$roomToEdit.name"
+                           class="form-control"/>
+                #else
+                    <input type="text" name="name" id="name" placeholder="Room name" class="form-control"/>
+                #end
             </div>
             <button type="submit" class="btn btn-default save-button" aria-label="Left Align">
                 <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>

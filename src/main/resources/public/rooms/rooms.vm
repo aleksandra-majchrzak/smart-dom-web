@@ -27,7 +27,7 @@
 
     #if($room)
         #parse("/public/rooms/room-details.vm")
-    #elseif($addNewRoom)
+    #elseif($addNewRoom || $roomToEdit)
         #parse("/public/rooms/add-room-panel.vm")
     #end
     </div>
