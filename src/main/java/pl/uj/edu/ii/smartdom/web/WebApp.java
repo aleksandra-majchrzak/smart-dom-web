@@ -5,7 +5,7 @@ import org.pac4j.sparkjava.SecurityFilter;
 import pl.uj.edu.ii.smartdom.web.controllers.ModulesController;
 import pl.uj.edu.ii.smartdom.web.controllers.RoomsController;
 import pl.uj.edu.ii.smartdom.web.controllers.SmartDomController;
-import pl.uj.edu.ii.smartdom.web.controllers.UserController;
+import pl.uj.edu.ii.smartdom.web.controllers.UsersController;
 import pl.uj.edu.ii.smartdom.web.security.SmartDomConfigFactory;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
@@ -35,15 +35,18 @@ public class WebApp {
                 render(SmartDomController.getRegister(request, response)));
 
 
-        //***************  USER  ***************
+        //***************  USERS  ***************
         post("/register", (request, response) ->
-                render(UserController.register(request, response)));
+                render(UsersController.register(request, response)));
 
         post("/signIn", (request, response) ->
-                render(UserController.signIn(request, response)));
+                render(UsersController.signIn(request, response)));
 
         get("/logOut", (request, response) ->
-                render(UserController.logOut(request, response)));
+                render(UsersController.logOut(request, response)));
+
+        get("/users", (request, response) ->
+                render(UsersController.getUsers(request, response)));
 
 
         //***************  ROOMS  ***************

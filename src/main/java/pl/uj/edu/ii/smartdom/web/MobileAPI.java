@@ -7,9 +7,11 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.query.Query;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
 import pl.uj.edu.ii.smartdom.web.database.entities.Module;
+import pl.uj.edu.ii.smartdom.web.database.entities.User;
 import pl.uj.edu.ii.smartdom.web.serverEntities.*;
 import pl.uj.edu.ii.smartdom.web.utils.JwtUtils;
 import pl.uj.edu.ii.smartdom.web.utils.ModuleUtils;
+import pl.uj.edu.ii.smartdom.web.utils.StringUtils;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -36,14 +38,31 @@ public class MobileAPI {
         post(baseURL + "/login", (req, res) -> {
             Gson gson = new Gson();
 
-            User user = gson.fromJson(req.body(), User.class);
+            UserEntity userEntity = gson.fromJson(req.body(), UserEntity.class);
 
-            System.out.println("username: " + user.getLogin());
-            System.out.println("password: " + user.getPassword());
+            System.out.println("in login");
 
-            String jwt = JwtUtils.createJWT(UUID.randomUUID().toString(), "mobile", user.getLogin());
+            Query<User> userQuery = DatabaseManager.getDataStore().find(User.class, "login =", userEntity.getLogin());
 
-            return gson.toJson(new LoginResponse(user.getLogin(), jwt), LoginResponse.class);
+            List<User> users = userQuery.asList();
+
+            if (!users.isEmpty()) {
+                User user = users.get(0);
+                if (user.isConfirmed()) {
+                    if (user.getPassword().equals(StringUtils.getHashString(userEntity.getPassword()))) {
+                        String jwt = JwtUtils.createJWT(UUID.randomUUID().toString(), "mobile", user.getId().toHexString());
+                        return gson.toJson(new LoginResponse(userEntity.getLogin(), jwt), LoginResponse.class);
+
+                    } else {
+                        res.status(401);
+                    }
+                } else {
+                    res.status(403);
+                }
+            } else {
+                res.status(401);
+            }
+            return null;
         });
 
         //*****  ROOMS  ******

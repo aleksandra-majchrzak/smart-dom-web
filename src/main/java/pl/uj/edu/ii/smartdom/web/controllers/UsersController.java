@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * Created by Mohru on 23.07.2017.
  */
-public class UserController {
+public class UsersController {
 
     byte[] bytes = {0, 1, 2};
     private Key apiKey = new SecretKeySpec(bytes, "");
@@ -37,7 +37,7 @@ public class UserController {
             if (user.isConfirmed()) {
                 if (user.getPassword().equals(StringUtils.getHashString(password))) {
 
-                    String token = JwtUtils.createJWT(UUID.randomUUID().toString(), "smart_dom", user.getLogin());
+                    String token = JwtUtils.createJWT(UUID.randomUUID().toString(), "smart_dom", user.getId().toHexString());
                     response.cookie("auth_token", token, 600, true, true);
 
                     request.session().attribute("username", user.getLogin());
@@ -94,5 +94,16 @@ public class UserController {
         response.removeCookie("auth_token");
         response.redirect("/");
         return null;
+    }
+
+    public static ModelAndView getUsers(Request request, Response response) {
+        List<User> users = DatabaseManager.getDataStore().find(User.class).filter("isAdmin ==", false).asList();
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("panelName", "Users");
+        model.put("users", users);
+        model.put("username", request.session().attribute("username"));
+
+        return new ModelAndView(model, "/public/users/users.vm");
     }
 }

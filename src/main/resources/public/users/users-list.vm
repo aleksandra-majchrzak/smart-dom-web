@@ -1,0 +1,33 @@
+<ul class="list-group">
+    #foreach($user in $users)
+        <a href="" class="list-group-item">
+            <div>
+                <h4>$user.login
+                    <div class="admin-button-container">
+                        #if(!$user.isActive)
+                            <form role="form" action="/users/$user.id/activate" method="post" class="edit-buttons">
+                                <div>
+                                    <button type="submit" class="btn btn-mini btn-primary">Aktywuj</button>
+                                </div>
+                            </form>
+                        #end
+
+                        <form role="form" action="/users/$user.id/delete" method="post" class="edit-buttons">
+                            <div>
+                                <button type="submit" class="btn btn-mini btn-danger">Usuń</button>
+                            </div>
+                        </form>
+                    </div>
+                </h4>
+            </div>
+        </a>
+    #end
+
+    #if($users.size == 0)
+        <br/>
+        <div class="center-form-big">
+            <h3>Brak dodanych użytkowników</h3>
+        </div>
+        <br/>
+    #end
+</ul>

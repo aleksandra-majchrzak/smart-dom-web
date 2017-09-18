@@ -92,3 +92,17 @@
     display: inline-block;
     cursor: pointer;
 }
+
+.admin-button-container {
+    float: right;
+    display: inline-block;
+    margin-top: -10px;
+    margin-bottom: -10px;
+}
+
+.inner-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}

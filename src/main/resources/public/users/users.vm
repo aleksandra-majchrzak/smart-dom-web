@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Użytkownicy</title>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/main.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+    #parse("/public/navbar.vm")
+<script type="text/javascript"> $('#users-tab').addClass("active") </script>
+<div class="main-container">
+
+    #if($errors)
+        #foreach($error in $errors)
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span>$error</span>
+            </div>
+        #end
+    #end
+
+    <div class="container inner-container">
+        <div class="panel panel-default col-lg-8 smart-panel">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <h1>
+                    Użytkownicy
+                </h1>
+
+            </div>
+
+            <!-- List group -->
+
+            #parse("/public/users/users-list.vm")
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
