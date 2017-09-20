@@ -4,19 +4,19 @@
             <div>
                 <h4>$user.login
                     <div class="admin-button-container">
-                        #if(!$user.isActive)
+                        <form role="form" action="/users/$user.id/delete" method="post" class="edit-buttons button-margin">
+                            <div>
+                                <button type="submit" class="btn btn-mini btn-danger">Usuń</button>
+                            </div>
+                        </form>
+
+                        #if(!$user.confirmed)
                             <form role="form" action="/users/$user.id/activate" method="post" class="edit-buttons">
                                 <div>
                                     <button type="submit" class="btn btn-mini btn-primary">Aktywuj</button>
                                 </div>
                             </form>
                         #end
-
-                        <form role="form" action="/users/$user.id/delete" method="post" class="edit-buttons">
-                            <div>
-                                <button type="submit" class="btn btn-mini btn-danger">Usuń</button>
-                            </div>
-                        </form>
                     </div>
                 </h4>
             </div>

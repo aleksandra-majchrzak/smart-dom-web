@@ -81,6 +81,10 @@ public class User {
         return isConfirmed;
     }
 
+    public void setConfirmed(boolean confirmed) {
+        isConfirmed = confirmed;
+    }
+
     public boolean isAdmin() {
         return isAdmin;
     }

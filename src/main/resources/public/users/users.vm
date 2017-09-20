@@ -22,6 +22,12 @@
         #end
     #end
 
+    #if($info)
+        <div class="alert alert-info" role="alert">
+            <span>$info</span>
+        </div>
+    #end
+
     <div class="container inner-container">
         <div class="panel panel-default col-lg-8 smart-panel">
             <!-- Default panel contents -->

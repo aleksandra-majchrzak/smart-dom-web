@@ -1,7 +1,10 @@
 package pl.uj.edu.ii.smartdom.web.controllers;
 
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
+import pl.uj.edu.ii.smartdom.web.database.entities.Room;
 import pl.uj.edu.ii.smartdom.web.database.entities.User;
 import pl.uj.edu.ii.smartdom.web.utils.JwtUtils;
 import pl.uj.edu.ii.smartdom.web.utils.StringUtils;
@@ -104,6 +107,41 @@ public class UsersController {
         model.put("users", users);
         model.put("username", request.session().attribute("username"));
 
+        String info = request.session().attribute("info");
+        if (info != null) {
+            model.put("info", info);
+            request.session().removeAttribute("info");
+        }
+
         return new ModelAndView(model, "/public/users/users.vm");
+    }
+
+    public static ModelAndView activateUser(Request request, Response response) {
+        String id = request.params(":id");
+        User user = DatabaseManager.getDataStore().get(User.class, new ObjectId(id));
+        if (user != null) {
+            user.setConfirmed(true);
+            DatabaseManager.getDataStore().save(user);
+            request.session().attribute("info", "Konto użytkownika " + user.getLogin() + " zostało aktywowane.");
+        }
+
+        response.redirect("/users");
+        return null;
+    }
+
+    public static ModelAndView deleteUser(Request request, Response response) {
+        String id = request.params(":id");
+        User userToDelete = DatabaseManager.getDataStore().get(User.class, new ObjectId(id));
+        if (userToDelete != null) {
+            DatabaseManager.getDataStore().delete(userToDelete);
+            if (userToDelete.getRooms() != null) {
+                Datastore ds = DatabaseManager.getDataStore();
+                ds.update(ds.find(Room.class), ds.createUpdateOperations(Room.class).removeAll("userIds", userToDelete.getId()));
+                request.session().attribute("info", "Użytkownik usunięty.");
+            }
+        }
+
+        response.redirect("/users");
+        return null;
     }
 }

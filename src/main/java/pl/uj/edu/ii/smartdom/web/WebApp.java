@@ -48,6 +48,12 @@ public class WebApp {
         get("/users", (request, response) ->
                 render(UsersController.getUsers(request, response)));
 
+        post("/users/:id/activate", (request, response) ->
+                render(UsersController.activateUser(request, response)));
+
+        post("/users/:id/delete", (request, response) ->
+                render(UsersController.deleteUser(request, response)));
+
 
         //***************  ROOMS  ***************
         get("/rooms", (request, response) ->

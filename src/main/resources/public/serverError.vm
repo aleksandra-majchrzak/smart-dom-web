@@ -13,7 +13,7 @@
 <div class="main-container">
     <div class="alert alert-danger" role="alert">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-        <span>Wystąpił błąd. Jeśli będzie on nawracał, skontaktujs się z producentem.</span>
+        <span>Wystąpił błąd. Jeśli będzie on nawracał, skontaktuj się z producentem.</span>
     </div>
 </div>
 
