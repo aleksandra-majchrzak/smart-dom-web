@@ -24,6 +24,7 @@ public class RoomsController {
     public static ModelAndView getRooms(Request req, Response res) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("username", req.session().attribute("username"));
+        model.put("isAdmin", req.attribute("isAdmin"));
 
         List<Room> rooms = DatabaseManager.getDataStore().find(Room.class).asList();
         model.put("panelName", "Rooms");

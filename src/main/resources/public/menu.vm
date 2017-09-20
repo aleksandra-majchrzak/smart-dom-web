@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Smart Dom</title>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
-    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -29,13 +29,15 @@
                 </button>
             </a>
         </div>
-        <div>
-            <a href="/users" class="edit-buttons">
-                <button type="button" class="btn btn-default" aria-label="Left Align">
-                    <h3>UŻYTKOWNICY</h3>
-                </button>
-            </a>
-        </div>
+        #if($isAdmin)
+            <div>
+                <a href="/users" class="edit-buttons">
+                    <button type="button" class="btn btn-default" aria-label="Left Align">
+                        <h3>UŻYTKOWNICY</h3>
+                    </button>
+                </a>
+            </div>
+        #end
     </div>
 
 </div>

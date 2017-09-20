@@ -4,6 +4,7 @@ import org.pac4j.core.context.HttpConstants;
 import org.pac4j.sparkjava.DefaultHttpActionAdapter;
 import org.pac4j.sparkjava.SparkWebContext;
 import pl.uj.edu.ii.smartdom.web.controllers.SmartDomController;
+import spark.ModelAndView;
 import spark.TemplateEngine;
 
 import static spark.Spark.halt;
@@ -21,10 +22,10 @@ public class SmartDomHttpActionAdapter extends DefaultHttpActionAdapter {
 
     @Override
     public Object adapt(int code, SparkWebContext context) {
-        if (code == HttpConstants.UNAUTHORIZED) {
-            halt(401, templateEngine.render(SmartDomController.getMain(context.getSparkRequest(), context.getSparkResponse())));
-        } else if (code == HttpConstants.FORBIDDEN) {
-            halt(403, templateEngine.render(SmartDomController.getMain(context.getSparkRequest(), context.getSparkResponse())));
+        if (code == HttpConstants.UNAUTHORIZED || code == HttpConstants.FORBIDDEN) {
+            ModelAndView modelAndView = SmartDomController.getMain(context.getSparkRequest(), context.getSparkResponse());
+            if (modelAndView != null)
+                halt(code, templateEngine.render(modelAndView));
         } else {
             return super.adapt(code, context);
         }

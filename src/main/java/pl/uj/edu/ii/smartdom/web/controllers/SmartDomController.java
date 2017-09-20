@@ -1,7 +1,6 @@
 package pl.uj.edu.ii.smartdom.web.controllers;
 
 import org.pac4j.core.context.HttpConstants;
-import pl.uj.edu.ii.smartdom.web.database.entities.User;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -17,15 +16,15 @@ public class SmartDomController {
 
     public static ModelAndView getMain(Request request, Response response) {
         Map<String, Object> model = new HashMap<String, Object>();
-        User user = request.session().attribute("currentUser");
+        String username = request.session().attribute("username");
 
         int statusCode = response.status();
         switch (statusCode) {
             case HttpConstants.UNAUTHORIZED:
-                model.put("errors", Collections.singleton("Nie masz wystarczających uprawnień by oglądać tę stronę."));
+                model.put("errors", Collections.singleton("Musisz być zalogowany by oglądać tę stronę."));
                 break;
             case HttpConstants.FORBIDDEN:
-                model.put("errors", Collections.singleton("Musisz być zalogowany."));
+                model.put("errors", Collections.singleton("Nie masz wystarczających uprawnień by oglądać tę stronę."));
         }
 
         String info = request.session().attribute("info");
@@ -34,7 +33,7 @@ public class SmartDomController {
             request.session().removeAttribute("info");
         }
 
-        if (user != null) {
+        if (username != null) {
             response.redirect("/menu");
             return null;
         }
@@ -44,9 +43,9 @@ public class SmartDomController {
 
     public static ModelAndView getRegister(Request request, Response response) {
         Map<String, Object> model = new HashMap<String, Object>();
-        User user = request.session().attribute("currentUser");
+        String username = request.session().attribute("username");
 
-        if (user != null) {
+        if (username != null) {
             response.redirect("/menu");
             return null;
         }
@@ -57,6 +56,7 @@ public class SmartDomController {
     public static ModelAndView getMenu(Request request, Response response) {
         Map<String, Object> model = new HashMap<>();
         model.put("username", request.session().attribute("username"));
+        model.put("isAdmin", request.attribute("isAdmin"));
 
         return new ModelAndView(model, "/public/menu.vm");
     }

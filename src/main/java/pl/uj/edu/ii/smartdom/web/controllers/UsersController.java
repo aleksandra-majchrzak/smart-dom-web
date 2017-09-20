@@ -44,8 +44,6 @@ public class UsersController {
                     response.cookie("auth_token", token, 600, true, true);
 
                     request.session().attribute("username", user.getLogin());
-                    model.put("currentUsername", user.getLogin());
-
                     response.redirect("/menu");
                     return null;
                 } else {
@@ -106,6 +104,7 @@ public class UsersController {
         model.put("panelName", "Users");
         model.put("users", users);
         model.put("username", request.session().attribute("username"));
+        model.put("isAdmin", request.attribute("isAdmin"));
 
         String info = request.session().attribute("info");
         if (info != null) {

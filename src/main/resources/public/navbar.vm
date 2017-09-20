@@ -10,7 +10,9 @@
                         <li id="menu-tab"><a href="/menu">Menu</a></li>
                         <li id="rooms-tab"><a href="/rooms">Pokoje</a></li>
                         <li id="modules-tab"><a href="/modules">Moduły</a></li>
-                        <li id="users-tab"><a href="/users">Użytkownicy</a></li>
+                        #if($isAdmin)
+                            <li id="users-tab"><a href="/users">Użytkownicy</a></li>
+                        #end
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a>Witaj, $username</a></li>

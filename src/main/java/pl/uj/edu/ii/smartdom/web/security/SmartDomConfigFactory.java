@@ -4,9 +4,7 @@ import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.matching.PathMatcher;
 import org.pac4j.http.client.direct.CookieClient;
-import org.pac4j.http.client.direct.DirectBasicAuthClient;
 import org.pac4j.http.client.direct.HeaderClient;
-import org.pac4j.http.client.indirect.FormClient;
 import spark.TemplateEngine;
 
 /**
@@ -26,7 +24,7 @@ public class SmartDomConfigFactory {
         final HeaderClient headerClient = new HeaderClient("Authorization", new SmartDomTokenAuthenticator()
                 /*, new JwtAuthenticator(new SecretSignatureConfiguration(salt)) todo do sprawdzenia*/);
 
-        final Clients clients = new Clients("http://localhost:4567/", headerClient, cookieClient);
+        final Clients clients = new Clients("https://localhost:4567/", headerClient, cookieClient);
 
         final Config config = new Config(clients);
         config.addAuthorizer("custom", new SmartDomAuthorizer());
