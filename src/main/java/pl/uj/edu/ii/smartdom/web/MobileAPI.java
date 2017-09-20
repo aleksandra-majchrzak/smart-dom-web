@@ -197,13 +197,13 @@ public class MobileAPI {
                     result.humidity = 56;
                     break;
                 case "co2":
-                    result.co2 = 10;
+                    result.co2 = 0;
                     break;
                 case "co":
-                    result.co = 11;
+                    result.co = 0;
                     break;
                 case "gas":
-                    result.gas = 12;
+                    result.gas = 3;
                     break;
                 default:
                     break;
