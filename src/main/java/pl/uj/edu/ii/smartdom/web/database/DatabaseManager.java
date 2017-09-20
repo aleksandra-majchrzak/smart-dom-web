@@ -1,12 +1,17 @@
 package pl.uj.edu.ii.smartdom.web.database;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import pl.uj.edu.ii.smartdom.web.database.entities.Module;
 import pl.uj.edu.ii.smartdom.web.database.entities.Room;
 import pl.uj.edu.ii.smartdom.web.database.entities.User;
 import pl.uj.edu.ii.smartdom.web.utils.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Mohru on 15.07.2017.
@@ -15,7 +20,11 @@ public class DatabaseManager {
 
     private static final String HOST = "localhost";
     private static final int PORT = 27017;
+    private static final String AUTH_DB_NAME = "admin";
     private static final String DB_NAME = "smart_dom";
+    private static final String USERNAME = "Admin";
+    private static final String PSWD = "MySmartPassword123";
+
 
     private static Morphia morphia = new Morphia();
     private static Datastore datastore = null;
@@ -53,7 +62,11 @@ public class DatabaseManager {
         MongoClient mongoClient;
 
         try {
-            mongoClient = new MongoClient(HOST, PORT);
+            ServerAddress address = new ServerAddress(HOST, PORT);
+            List<MongoCredential> credentials = new ArrayList<>();
+            MongoCredential credential = MongoCredential.createCredential(USERNAME, AUTH_DB_NAME, PSWD.toCharArray());
+            credentials.add(credential);
+            mongoClient = new MongoClient(address, credentials);
             datastore = morphia.createDatastore(mongoClient, DB_NAME);
 
 
