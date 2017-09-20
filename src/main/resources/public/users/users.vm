@@ -42,6 +42,37 @@
 
             #parse("/public/users/users-list.vm")
         </div>
+
+        <div class="panel panel-default col-lg-8 smart-panel">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <h1>
+                    Zmień hasło
+                </h1>
+
+            </div>
+
+            <div class="center-form-big">
+                <form role="form" method="post" action="/users/$userId/pswd" style="max-width: 300px;">
+                    <div class="form-group">
+                        <input type="text" name="oldPassword" id="oldPassword" placeholder="Stare hasło"
+                               class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="newPassword" id="newPassword" placeholder="Nowe hasło"
+                               class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="newPasswordConfirm" id="newPasswordConfirm"
+                               placeholder="Powtórz nowe hasło" class="form-control"/>
+                    </div>
+                    <button type="submit" class="btn btn-default save-button" aria-label="Left Align">
+                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+                    </button>
+                    &nbsp;
+                </form>
+            </div>
+        </div>
     </div>
 
 </div>

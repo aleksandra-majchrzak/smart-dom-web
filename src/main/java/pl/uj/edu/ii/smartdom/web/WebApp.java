@@ -54,6 +54,9 @@ public class WebApp {
         post("/users/:id/delete", (request, response) ->
                 render(UsersController.deleteUser(request, response)));
 
+        post("/users/:id/pswd", (request, response) ->
+                render(UsersController.updatePassword(request, response)));
+
 
         //***************  ROOMS  ***************
         get("/rooms", (request, response) ->

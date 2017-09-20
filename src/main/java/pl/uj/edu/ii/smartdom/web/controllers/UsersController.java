@@ -105,11 +105,18 @@ public class UsersController {
         model.put("users", users);
         model.put("username", request.session().attribute("username"));
         model.put("isAdmin", request.attribute("isAdmin"));
+        model.put("userId", request.attribute("userId"));
 
         String info = request.session().attribute("info");
         if (info != null) {
             model.put("info", info);
             request.session().removeAttribute("info");
+        }
+
+        List<String> errors = request.session().attribute("errors");
+        if (errors != null) {
+            model.put("errors", errors);
+            request.session().removeAttribute("errors");
         }
 
         return new ModelAndView(model, "/public/users/users.vm");
@@ -143,4 +150,26 @@ public class UsersController {
         response.redirect("/users");
         return null;
     }
+
+    public static ModelAndView updatePassword(Request request, Response response) {
+        String id = request.params(":id");
+        User user = DatabaseManager.getDataStore().get(User.class, new ObjectId(id));
+        if (user != null) {
+            String oldPassword = request.queryParams("oldPassword");
+            String newPassword = request.queryParams("newPassword");
+            String newPasswordConfirm = request.queryParams("newPasswordConfirm");
+            if (StringUtils.getHashString(oldPassword).equals(user.getPassword())
+                    && newPassword.equals(newPasswordConfirm)) {
+                user.setPassword(StringUtils.getHashString(newPassword));
+                DatabaseManager.getDataStore().save(user);
+                request.session().attribute("info", "Hasło zostało zaktualizowane.");
+            } else {
+                request.session().attribute("errors", Collections.singletonList("Nie udało się zaktualizować hasła. Błędne dane."));
+            }
+        }
+
+        response.redirect("/users");
+        return null;
+    }
+
 }

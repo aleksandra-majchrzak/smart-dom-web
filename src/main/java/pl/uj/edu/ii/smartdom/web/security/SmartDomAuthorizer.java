@@ -29,6 +29,7 @@ public class SmartDomAuthorizer extends ProfileAuthorizer<CommonProfile> {
         Pattern p = Pattern.compile("/users[/.*]?");
         Matcher m = p.matcher(path);
         if (m.find()) {
+            context.setRequestAttribute("userId", user.getId().toString());
             return user.isAdmin();
         }
         // todo sprawdzic czy dant uzytkownik ma uprawnienie do danego zasobu np. modulu/pokoju/strony z userami
