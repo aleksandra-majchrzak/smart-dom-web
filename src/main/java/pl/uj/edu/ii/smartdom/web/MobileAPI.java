@@ -50,7 +50,11 @@ public class MobileAPI {
                 User user = users.get(0);
                 if (user.isConfirmed()) {
                     if (user.getPassword().equals(StringUtils.getHashString(userEntity.getPassword()))) {
-                        String jwt = JwtUtils.createJWT(UUID.randomUUID().toString(), "mobile", user.getId().toHexString());
+                        // set scope of rooms
+                        String roomsScope = user.getRooms().stream()
+                                .map(r -> r.getId().toHexString())
+                                .reduce("", (s1, s2) -> s1 + " " + s2);
+                        String jwt = JwtUtils.createJWT(UUID.randomUUID().toString(), "mobile", user.getId().toHexString(), roomsScope);
                         return gson.toJson(new LoginResponse(userEntity.getLogin(), jwt), LoginResponse.class);
 
                     } else {

@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class JwtUtils {
 
-    public static String createJWT(String id, String issuer, String subject) {
+    public static String createJWT(String id, String issuer, String subject, String scope) {
 //The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
@@ -29,6 +29,7 @@ public class JwtUtils {
                 .setIssuedAt(now)
                 .setSubject(subject)
                 .setIssuer(issuer)
+                .claim("scope", scope)
                 .signWith(signatureAlgorithm, signingKey);
 
         //if it has been specified, let's add the expiration

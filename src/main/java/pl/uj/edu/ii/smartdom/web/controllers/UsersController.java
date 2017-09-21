@@ -39,8 +39,10 @@ public class UsersController {
             User user = users.get(0);
             if (user.isConfirmed()) {
                 if (user.getPassword().equals(StringUtils.getHashString(password))) {
-
-                    String token = JwtUtils.createJWT(UUID.randomUUID().toString(), "smart_dom", user.getId().toHexString());
+                    String roomsScope = user.getRooms().stream()
+                            .map(r -> r.getId().toHexString())
+                            .reduce("", (s1, s2) -> s1 + " " + s2);
+                    String token = JwtUtils.createJWT(UUID.randomUUID().toString(), "smart_dom", user.getId().toHexString(), roomsScope);
                     response.cookie("auth_token", token, 600, true, true);
 
                     request.session().attribute("username", user.getLogin());
