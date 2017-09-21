@@ -1,7 +1,5 @@
 package pl.uj.edu.ii.smartdom.web.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import org.bson.types.ObjectId;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.WebContext;
@@ -32,8 +30,7 @@ public class SmartDomTokenAuthenticator implements Authenticator<TokenCredential
         }
 
         try {
-            Jws<Claims> claims = JwtUtils.parseJwtToken(token);
-            String subject = claims.getBody().getSubject();
+            String subject = JwtUtils.getUserIdFromToken(token);
             User user = DatabaseManager.getDataStore().get(User.class, new ObjectId(subject));
 
             if (user == null) {

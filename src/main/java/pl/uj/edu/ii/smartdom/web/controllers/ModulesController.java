@@ -8,8 +8,10 @@ import pl.uj.edu.ii.smartdom.web.JmDNSManager;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
 import pl.uj.edu.ii.smartdom.web.database.entities.Module;
 import pl.uj.edu.ii.smartdom.web.database.entities.Room;
+import pl.uj.edu.ii.smartdom.web.database.entities.User;
 import pl.uj.edu.ii.smartdom.web.enums.ModuleType;
 import pl.uj.edu.ii.smartdom.web.utils.JmDNSService;
+import pl.uj.edu.ii.smartdom.web.utils.JwtUtils;
 import pl.uj.edu.ii.smartdom.web.utils.ModuleUtils;
 import spark.ModelAndView;
 import spark.Request;
@@ -35,7 +37,17 @@ public class ModulesController {
         model.put("username", req.session().attribute("username"));
         model.put("isAdmin", req.attribute("isAdmin"));
 
-        List<Module> modules = DatabaseManager.getDataStore().find(Module.class).asList();
+        List<Module> modules;
+
+        if (req.attribute("isAdmin")) {
+            modules = DatabaseManager.getDataStore().find(Module.class).asList();
+        } else {
+            String userId = JwtUtils.getUserIdFromToken(req.cookie("auth_token"));
+            User user = DatabaseManager.getDataStore().get(User.class, new ObjectId(userId));
+            modules = DatabaseManager.getDataStore().find(Module.class)
+                    .field("room").in(user.getRooms()).asList();
+        }
+
         model.put("panelName", "Modules");
         model.put("modules", modules);
         model.put("moduleCount", modules.size());

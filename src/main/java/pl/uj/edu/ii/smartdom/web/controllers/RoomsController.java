@@ -7,6 +7,7 @@ import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
 import pl.uj.edu.ii.smartdom.web.database.entities.Module;
 import pl.uj.edu.ii.smartdom.web.database.entities.Room;
 import pl.uj.edu.ii.smartdom.web.database.entities.User;
+import pl.uj.edu.ii.smartdom.web.utils.JwtUtils;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -26,7 +27,14 @@ public class RoomsController {
         model.put("username", req.session().attribute("username"));
         model.put("isAdmin", req.attribute("isAdmin"));
 
-        List<Room> rooms = DatabaseManager.getDataStore().find(Room.class).asList();
+        String userId = JwtUtils.getUserIdFromToken(req.cookie("auth_token"));
+        List<Room> rooms;
+        if (req.attribute("isAdmin")) {
+            rooms = DatabaseManager.getDataStore().find(Room.class).asList();
+        } else {
+            rooms = DatabaseManager.getDataStore().get(User.class, new ObjectId(userId)).getRooms();
+        }
+
         model.put("panelName", "Rooms");
         model.put("rooms", rooms);
         model.put("roomCount", rooms.size());

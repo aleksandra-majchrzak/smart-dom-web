@@ -48,4 +48,8 @@ public class JwtUtils {
                 .setSigningKey(DatatypeConverter.parseBase64Binary(Constants.JWT_SECRET))
                 .parseClaimsJws(token);
     }
+
+    public static String getUserIdFromToken(String token) {
+        return parseJwtToken(token).getBody().getSubject();
+    }
 }
