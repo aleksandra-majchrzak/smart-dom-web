@@ -35,11 +35,13 @@
     #end
     </div>
 
-    <div id="found-modules-container" class="container">
-        <div id="found-modules">
-            #parse("/public/dnsModulesPanel.vm")
+    #if($isAdmin)
+        <div id="found-modules-container" class="container">
+            <div id="found-modules">
+                #parse("/public/dnsModulesPanel.vm")
+            </div>
         </div>
-    </div>
+    #end
 
 
 </div>
@@ -47,8 +49,10 @@
 </body>
 </html>
 
+#if($isAdmin)
 <script type="text/javascript">
     setInterval(function () {
         $("#found-modules-container").load("/modules #found-modules");
     }, 3000);
 </script>
+#end

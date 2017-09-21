@@ -6,7 +6,9 @@
                 Moduły
             #else
                 Pokoje
-                #include("/public/buttons/add-room-button.vm")
+                #if($isAdmin)
+                    #include("/public/buttons/add-room-button.vm")
+                #end
             #end
         </h1>
 
