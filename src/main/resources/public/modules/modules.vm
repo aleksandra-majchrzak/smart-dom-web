@@ -23,6 +23,11 @@
         #end
     #end
 
+    #if($isAdmin)
+        <h2 style="margin-top: -50px">Adres serwera: $serverAddress</h2>
+        <br/>
+    #end
+
     <div class="container">
         #parse("/public/reusable-panel.vm")
 

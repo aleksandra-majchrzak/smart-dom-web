@@ -50,4 +50,15 @@ public class JmDNSManager {
         }
         return null;
     }
+
+    public static String getAddress() {
+        try {
+            if (jmdns != null)
+                return jmdns.getInetAddress().getHostAddress();
+            return "";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 }

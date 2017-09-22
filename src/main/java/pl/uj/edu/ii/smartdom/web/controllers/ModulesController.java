@@ -55,6 +55,7 @@ public class ModulesController {
         model.put("serviceCount", services.size());
 
         JmDNSManager.startJmDNS(serviceListener);
+        model.put("serverAddress", JmDNSManager.getAddress());
 
         return new ModelAndView(model, "/public/modules/modules.vm");
     }
