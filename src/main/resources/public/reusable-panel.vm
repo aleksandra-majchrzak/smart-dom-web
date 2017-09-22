@@ -4,6 +4,9 @@
         <h1>
             #if($modules)
                 Moduły
+                #if($isAdmin)
+                    #include("/public/buttons/add-module-button.vm")
+                #end
             #else
                 Pokoje
                 #if($isAdmin)

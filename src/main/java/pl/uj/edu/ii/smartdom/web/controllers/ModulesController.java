@@ -9,6 +9,7 @@ import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
 import pl.uj.edu.ii.smartdom.web.database.entities.Module;
 import pl.uj.edu.ii.smartdom.web.database.entities.Room;
 import pl.uj.edu.ii.smartdom.web.database.entities.User;
+import pl.uj.edu.ii.smartdom.web.enums.ConnectionType;
 import pl.uj.edu.ii.smartdom.web.enums.ModuleType;
 import pl.uj.edu.ii.smartdom.web.utils.JmDNSService;
 import pl.uj.edu.ii.smartdom.web.utils.JwtUtils;
@@ -57,6 +58,12 @@ public class ModulesController {
         JmDNSManager.startJmDNS(serviceListener);
         model.put("serverAddress", JmDNSManager.getAddress());
 
+        List<String> errors = req.session().attribute("errors");
+        if (errors != null) {
+            model.put("errors", errors);
+            req.session().removeAttribute("errors");
+        }
+
         return new ModelAndView(model, "/public/modules/modules.vm");
     }
 
@@ -81,7 +88,7 @@ public class ModulesController {
             Module module = new Module(service.getName(),
                     ModuleType.UNKNOWN,
                     service.getAddress(),
-                    service.getPort());
+                    service.getPort(), ConnectionType.WI_FI);
 
             if (DatabaseManager.getDataStore().find(Module.class, "name", service.getName()).countAll() == 0) {
                 HttpURLConnection connection = ModuleUtils.getGetConnection(module, "type");
@@ -104,13 +111,34 @@ public class ModulesController {
             }
         }
 
-        ModelAndView modelAndView = getModules(req, res);
         if (error != null) {
-            HashMap<String, Object> model = (HashMap<String, Object>) modelAndView.getModel();
-            model.put("errors", Collections.singleton(error));
+            req.session().attribute("errors", Collections.singleton(error));
         }
+        res.redirect("/modules");
+        return null;
+    }
 
-        return modelAndView;
+    public static ModelAndView saveBleModule(Request req, Response res) {
+
+        String name = req.queryParams("name");
+        String address = req.queryParams("address");
+        //String type = req.queryParams("type");
+        String roomId = req.queryParams("roomId");
+        Datastore ds = DatabaseManager.getDataStore();
+        Room room = ds.get(Room.class, new ObjectId(roomId));
+
+        if (ds.find(Module.class, "address", address).countAll() > 0) {
+            req.session().attribute("errors", Collections.singleton("Moduł o tym adresie już istnieje."));
+        } else {
+            Module newModule = new Module(name, ModuleType.METEO_MODULE, address, 0, ConnectionType.BLE);
+            newModule.setRoom(room);
+            if (room != null) {
+                ds.update(room, ds.createUpdateOperations(Room.class).add("modules", newModule));
+            }
+            ds.save(newModule);
+        }
+        res.redirect("/modules");
+        return null;
     }
 
     public static ModelAndView getModule(Request req, Response res) {

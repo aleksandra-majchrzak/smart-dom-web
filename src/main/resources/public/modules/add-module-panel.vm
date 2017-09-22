@@ -3,23 +3,24 @@
 
     <div class="panel-heading ">
         <h1>
-            Nowy moduł
+            Nowy moduł BLE
         </h1>
     </div>
     <div class="center-form-big">
-        <form role="form" method="post" action="/modules" style="max-width: 300px;">
+        <form role="form" method="post" action="/modules/ble" style="max-width: 300px;">
             <div class="form-group">
-                <input type="text" name="name" id="name" placeholder="Module name" class="form-control"/>
+                <input type="text" name="name" id="name" placeholder="Nazwa modułu" class="form-control"/>
             </div>
             <div class="form-group">
-                <input type="text" name="port" id="port" placeholder="Module port" class="form-control"/>
+                <input type="text" name="address" id="address" placeholder="Adres modułu" class="form-control"/>
             </div>
             <div class="form-group">
-                <select name="type" id="type" placeholder="Module type" class="form-control">
+                <select name="type" id="type" placeholder="Typ modułu" class="form-control" disabled>
                     <option value="LIGHT_MODULE">Światło</option>
                     <option value="BLIND_MOTOR_MODULE">Rolety</option>
                     <option value="METEO_MODULE">Meteo</option>
                 </select>
+                <script type="text/javascript"> $('#type').val('METEO_MODULE') </script>
             </div>
             <div class="form-group">
                 <select name="roomId" id="roomId" placeholder="Module room" class="form-control">

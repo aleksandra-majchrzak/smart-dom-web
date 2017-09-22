@@ -4,6 +4,7 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
+import pl.uj.edu.ii.smartdom.web.enums.ConnectionType;
 import pl.uj.edu.ii.smartdom.web.enums.ModuleType;
 
 /**
@@ -19,6 +20,7 @@ public class Module {
     private String address;
     @Reference
     private Room room;
+    private ConnectionType connectionType;
 
     public Module() {
     }
@@ -27,11 +29,12 @@ public class Module {
         this.name = name;
     }
 
-    public Module(String name, ModuleType type, String address, int port) {
+    public Module(String name, ModuleType type, String address, int port, ConnectionType connectionType) {
         this.name = name;
         this.type = type;
         this.address = address;
         this.port = port;
+        this.connectionType = connectionType;
     }
 
     public ObjectId getId() {
@@ -72,5 +75,9 @@ public class Module {
 
     public void setRoom(Room room) {
         this.room = room;
+    }
+
+    public ConnectionType getConnectionType() {
+        return connectionType;
     }
 }
