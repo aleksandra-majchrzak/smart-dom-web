@@ -2,7 +2,13 @@
     #foreach($module in $modules)
         <a href="/modules/$module.id" class="list-group-item">
             <div>
-                <h4>${module.name}</h4>
+                <h4>
+                    #if($module.connectionType == "BLE")
+                        <img src="/images/bluetooth.png" alt="bluetooth" style="width:32px;height:32px;"/>
+                    #else
+                        <img src="/images/wifi.png" alt="wifi" style="width:32px;height:32px;"/>
+                    #end
+                    ${module.name}</h4>
             </div>
         </a>
     #end
