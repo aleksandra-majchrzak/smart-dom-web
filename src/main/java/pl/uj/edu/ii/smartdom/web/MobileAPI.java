@@ -13,6 +13,8 @@ import pl.uj.edu.ii.smartdom.web.utils.JwtUtils;
 import pl.uj.edu.ii.smartdom.web.utils.ModuleUtils;
 import pl.uj.edu.ii.smartdom.web.utils.StringUtils;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -102,14 +104,18 @@ public class MobileAPI {
             System.out.println("module id: " + light.getServerId());
 
             Module module = DatabaseManager.getDataStore().get(Module.class, new ObjectId(light.getServerId()));
+            LightResponse lightResponse = new LightResponse();
 
             if (module != null) {
                 HttpURLConnection connection = ModuleUtils.getPostConnection(module, "turnOnLight");
                 response.raw().setStatus(connection.getResponseCode());
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String body = reader.readLine();
+                lightResponse.brightness = Integer.valueOf(body.split(":")[1]);
             } else {
                 response.raw().setStatus(404);
             }
-            return gson.toJson(true, Boolean.class);
+            return gson.toJson(lightResponse, LightResponse.class);
         });
 
         post(baseURL + "/turnOffLight", (request, response) -> {
