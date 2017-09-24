@@ -43,7 +43,7 @@ public class UsersController {
                             .map(r -> r.getId().toHexString())
                             .reduce("", (s1, s2) -> s1 + " " + s2);
                     String token = JwtUtils.createJWT(UUID.randomUUID().toString(), "smart_dom", user.getId().toHexString(), roomsScope);
-                    response.cookie("auth_token", token, 600, true, true);
+                    response.cookie("auth_token", token, 3600, true, true);
 
                     request.session().attribute("username", user.getLogin());
                     response.redirect("/menu");

@@ -122,8 +122,8 @@ public class WebApp {
 
         final Config config = new SmartDomConfigFactory(new VelocityTemplateEngine()).build();
 
-        before(new SecurityFilter(config, "CookieClient", "custom", "excludedMain,excludedRegister,excludedApi, excludedSignIn"));
-        before("/api/*", new SecurityFilter(config, "HeaderClient", "custom", "excludedLogin"));
+        before(new SecurityFilter(config, "CookieClient", "custom", "excludedMain,excludedRegister,excludedApi, excludedSignIn", true));
+        before("/api/*", new SecurityFilter(config, "HeaderClient", "custom", "excludedLogin", true));
     }
 
     private static String render(ModelAndView modelAndView) {

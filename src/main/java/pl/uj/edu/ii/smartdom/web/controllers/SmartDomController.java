@@ -33,6 +33,10 @@ public class SmartDomController {
             request.session().removeAttribute("info");
         }
 
+        if (request.cookie("auth_token") == null) {
+            request.session().removeAttribute("username");
+        }
+
         if (username != null) {
             response.redirect("/menu");
             return null;
