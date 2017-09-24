@@ -99,6 +99,9 @@ public class ModulesController {
                     DatabaseManager.getDataStore().save(module);
                     service.setConnected(true);
 
+                    res.redirect("/modules/" + module.getId().toHexString());
+                    return null;
+
                 } catch (IOException e) {
                     e.printStackTrace();
                     error = "Nie można połaczyć z modułem.";
@@ -132,10 +135,10 @@ public class ModulesController {
         } else {
             Module newModule = new Module(name, ModuleType.METEO_MODULE, address, 0, ConnectionType.BLE);
             newModule.setRoom(room);
+            ds.save(newModule);
             if (room != null) {
                 ds.update(room, ds.createUpdateOperations(Room.class).add("modules", newModule));
             }
-            ds.save(newModule);
         }
         res.redirect("/modules");
         return null;
