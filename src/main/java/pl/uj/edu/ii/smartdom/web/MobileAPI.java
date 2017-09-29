@@ -222,31 +222,6 @@ public class MobileAPI {
             return gson.toJson(result, MeteoResponse.class);
         });
 
-
-        //*****  DOOR  *****
-        post(baseURL + "/openDoor", (request, response) -> {
-            Gson gson = new Gson();
-
-            Door door = gson.fromJson(request.body(), Door.class);
-            System.out.println("door id: " + door.getServerId());
-
-            DoorResponse result = new DoorResponse();
-            result.isOpen = door.isOpen;
-            MobileAPI.isOpen = door.isOpen;
-            return gson.toJson(result, DoorResponse.class);
-        });
-
-        get(baseURL + "/openDoor", (request, response) -> {
-            String id = request.queryParams("doorServerId");
-            System.out.println("door id: " + id);
-
-            Gson gson = new Gson();
-
-            DoorResponse result = new DoorResponse();
-            result.isOpen = isOpen;
-            return gson.toJson(result, DoorResponse.class);
-        });
-
         //*****  BLIND  *****
         post(baseURL + "/openBlind", (request, response) -> {
             Gson gson = new Gson();
