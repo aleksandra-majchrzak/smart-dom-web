@@ -21,8 +21,7 @@ public class SmartDomConfigFactory {
     public Config build() {
 
         final CookieClient cookieClient = new CookieClient("auth_token", new SmartDomTokenAuthenticator());
-        final HeaderClient headerClient = new HeaderClient("Authorization", new SmartDomTokenAuthenticator()
-                /*, new JwtAuthenticator(new SecretSignatureConfiguration(salt)) todo do sprawdzenia*/);
+        final HeaderClient headerClient = new HeaderClient("Authorization", new SmartDomTokenAuthenticator());
 
         final Clients clients = new Clients("https://localhost:4567/", headerClient, cookieClient);
 

@@ -29,6 +29,7 @@
 
     <div class="center-form">
         <form role="form" method="post" action="/signIn" style="max-width: 300px;">
+            <input type="hidden" name="CSRFToken" value="$csrfToken">
             <div class="form-group">
                 <input type="text" name="username" id="username" placeholder="Wpisz login" class="form-control"/>
             </div>

@@ -3,6 +3,7 @@ package pl.uj.edu.ii.smartdom.web.controllers;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
+import org.pac4j.core.context.Pac4jConstants;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
 import pl.uj.edu.ii.smartdom.web.database.entities.Room;
 import pl.uj.edu.ii.smartdom.web.database.entities.User;
@@ -45,7 +46,9 @@ public class UsersController {
                     String token = JwtUtils.createJWT(UUID.randomUUID().toString(), "smart_dom", user.getId().toHexString(), roomsScope);
                     response.cookie("auth_token", token, 3600, true, true);
 
+                    String csrfToken = UUID.randomUUID().toString();
                     request.session().attribute("username", user.getLogin());
+                    request.session().attribute(Pac4jConstants.CSRF_TOKEN, csrfToken);
                     response.redirect("/menu");
                     return null;
                 } else {
@@ -94,6 +97,7 @@ public class UsersController {
     public static ModelAndView logOut(Request request, Response response) {
         request.session(false).invalidate();
         request.session().attribute("username", null);
+        request.session().attribute(Pac4jConstants.CSRF_TOKEN, null);
         response.removeCookie("auth_token");
         response.redirect("/");
         return null;
@@ -108,6 +112,7 @@ public class UsersController {
         model.put("username", request.session().attribute("username"));
         model.put("isAdmin", request.attribute("isAdmin"));
         model.put("userId", request.attribute("userId"));
+        model.put("csrfToken", request.session().attribute(Pac4jConstants.CSRF_TOKEN));
 
         String info = request.session().attribute("info");
         if (info != null) {

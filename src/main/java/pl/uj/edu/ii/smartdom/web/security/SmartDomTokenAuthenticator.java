@@ -1,5 +1,7 @@
 package pl.uj.edu.ii.smartdom.web.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import org.bson.types.ObjectId;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.WebContext;
@@ -9,6 +11,7 @@ import org.pac4j.core.exception.CredentialsException;
 import org.pac4j.core.exception.HttpAction;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.util.CommonHelper;
+import pl.uj.edu.ii.smartdom.web.Constants;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
 import pl.uj.edu.ii.smartdom.web.database.entities.User;
 import pl.uj.edu.ii.smartdom.web.utils.JwtUtils;
@@ -30,7 +33,18 @@ public class SmartDomTokenAuthenticator implements Authenticator<TokenCredential
         }
 
         try {
-            String subject = JwtUtils.getUserIdFromToken(token);
+            Jws<Claims> claims = JwtUtils.parseJwtToken(token);
+            String subject = claims.getBody().getSubject();
+            String issuer = claims.getBody().getIssuer();
+
+            if (!issuer.equals("mobile") && context.getRequestMethod().equals("POST")) {
+                String sessionToken = context.getSessionAttribute(Pac4jConstants.CSRF_TOKEN).toString();
+                String requestToken = context.getRequestParameter("CSRFToken");
+
+                if (!sessionToken.equals(requestToken))
+                    throwsException("Niezgodny token. Możliwa próba ataku CSRF.");
+            }
+
             User user = DatabaseManager.getDataStore().get(User.class, new ObjectId(subject));
 
             if (user == null) {
@@ -40,7 +54,7 @@ public class SmartDomTokenAuthenticator implements Authenticator<TokenCredential
                         || (clientName.equals("HeaderClient") && user.getLogin().equals(context.getRequestParameter("login")))) {
 
                     final CommonProfile profile = new CommonProfile();
-                    profile.addAttribute(Pac4jConstants.CSRF_TOKEN, token);
+                    profile.addAttribute(Constants.JWT_TOKEN, token);
                     profile.addAttribute(Pac4jConstants.USERNAME, subject);
                     credentials.setUserProfile(profile);
                 } else {

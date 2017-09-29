@@ -54,6 +54,7 @@
 
             <div class="center-form-big">
                 <form role="form" method="post" action="/users/$userId/pswd" style="max-width: 300px;">
+                    <input type="hidden" name="CSRFToken" value="$csrfToken">
                     <div class="form-group">
                         <input type="text" name="oldPassword" id="oldPassword" placeholder="Stare hasło"
                                class="form-control"/>

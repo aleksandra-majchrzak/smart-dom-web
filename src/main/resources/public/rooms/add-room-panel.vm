@@ -16,6 +16,7 @@
         #else
         <form role="form" method="post" action="/rooms/$roomToEdit.id" style="max-width: 300px;">
         #end
+            <input type="hidden" name="CSRFToken" value="$csrfToken">
             <div class="form-group">
                 #if($roomToEdit)
                     <input type="text" name="name" id="name" placeholder="Room name" value="$roomToEdit.name"

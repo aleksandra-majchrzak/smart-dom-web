@@ -3,6 +3,7 @@ package pl.uj.edu.ii.smartdom.web.controllers;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
+import org.pac4j.core.context.Pac4jConstants;
 import pl.uj.edu.ii.smartdom.web.Constants;
 import pl.uj.edu.ii.smartdom.web.JmDNSManager;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
@@ -37,6 +38,7 @@ public class ModulesController {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("username", req.session().attribute("username"));
         model.put("isAdmin", req.attribute("isAdmin"));
+        model.put("csrfToken", req.session().attribute(Pac4jConstants.CSRF_TOKEN));
 
         List<Module> modules;
 

@@ -8,6 +8,7 @@
     </div>
     <div class="center-form-big">
         <form role="form" method="post" action="/modules/ble" style="max-width: 300px;">
+            <input type="hidden" name="CSRFToken" value="$csrfToken">
             <div class="form-group">
                 <input type="text" name="name" id="name" placeholder="Nazwa modułu" class="form-control"/>
             </div>

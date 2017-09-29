@@ -11,6 +11,7 @@
                     </button>
                 </a>
                 <form role="form" class="delete-button edit-buttons">
+                    <input type="hidden" name="CSRFToken" value="$csrfToken">
                     <button type="button" class="btn btn-default delete-button" onclick="onModuleDeleteClick()">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     </button>
@@ -22,7 +23,16 @@
                         if (confirm("Czy chcesz usunąć ten moduł?") == true) {
                             var form = document.createElement("form");
                             form.setAttribute("method", "post");
+                            form.setAttribute("CSRFToken", "$csrfToken")
                             form.setAttribute("action", "/modules/$module.id/delete");
+
+                            var hiddenField = document.createElement("input");
+                            hiddenField.type = "hidden";
+                            hiddenField.id = "CSRFToken";
+                            hiddenField.name = "CSRFToken";
+                            hiddenField.value = "$csrfToken";
+                            form.appendChild(hiddenField);
+
                             document.body.appendChild(form);
                             form.submit();
                         }

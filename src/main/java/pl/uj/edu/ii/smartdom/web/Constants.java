@@ -10,4 +10,5 @@ public interface Constants {
     String SMART_DOM = "SmartDom";
 
     String JWT_SECRET = "someSecret";
+    String JWT_TOKEN = "jwt_token";
 }

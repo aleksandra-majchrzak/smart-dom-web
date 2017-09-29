@@ -1,6 +1,7 @@
 package pl.uj.edu.ii.smartdom.web.controllers;
 
 import org.pac4j.core.context.HttpConstants;
+import org.pac4j.core.context.Pac4jConstants;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -35,6 +36,7 @@ public class SmartDomController {
 
         if (request.cookie("auth_token") == null) {
             request.session().removeAttribute("username");
+            request.session().removeAttribute(Pac4jConstants.CSRF_TOKEN);
         }
 
         if (username != null) {

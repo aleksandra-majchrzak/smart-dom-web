@@ -3,6 +3,7 @@ package pl.uj.edu.ii.smartdom.web.controllers;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
+import org.pac4j.core.context.Pac4jConstants;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
 import pl.uj.edu.ii.smartdom.web.database.entities.Module;
 import pl.uj.edu.ii.smartdom.web.database.entities.Room;
@@ -26,6 +27,7 @@ public class RoomsController {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("username", req.session().attribute("username"));
         model.put("isAdmin", req.attribute("isAdmin"));
+        model.put("csrfToken", req.session().attribute(Pac4jConstants.CSRF_TOKEN));
 
         String userId = JwtUtils.getUserIdFromToken(req.cookie("auth_token"));
         List<Room> rooms;

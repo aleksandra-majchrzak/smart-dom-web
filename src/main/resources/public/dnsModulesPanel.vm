@@ -20,6 +20,7 @@
                         </span>
                     #else
                         <form role="form" method="post" action="/modules">
+                            <input type="hidden" name="CSRFToken" value="$csrfToken">
                             <input type="hidden" name="moduleToConnectName" id="moduleToConnectName"
                                    value="$service.name"/>
                             <button type="submit" class="btn btn-default" aria-label="Left Align">

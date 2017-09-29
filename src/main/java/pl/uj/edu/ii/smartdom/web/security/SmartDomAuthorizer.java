@@ -5,10 +5,10 @@ import io.jsonwebtoken.Jws;
 import org.bson.types.ObjectId;
 import org.eclipse.jetty.util.StringUtil;
 import org.pac4j.core.authorization.authorizer.ProfileAuthorizer;
-import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.exception.HttpAction;
 import org.pac4j.core.profile.CommonProfile;
+import pl.uj.edu.ii.smartdom.web.Constants;
 import pl.uj.edu.ii.smartdom.web.database.DatabaseManager;
 import pl.uj.edu.ii.smartdom.web.database.entities.Module;
 import pl.uj.edu.ii.smartdom.web.database.entities.User;
@@ -41,7 +41,7 @@ public class SmartDomAuthorizer extends ProfileAuthorizer<CommonProfile> {
         Matcher mRooms = Pattern.compile("/rooms(/(.*)?)?").matcher(path);
         Matcher mModules = Pattern.compile("/modules(/(.*)?)?").matcher(path);
 
-        String token = (String) profile.getAttribute(Pac4jConstants.CSRF_TOKEN);
+        String token = (String) profile.getAttribute(Constants.JWT_TOKEN);
         Jws<Claims> claims = JwtUtils.parseJwtToken(token);
 
         if (mUsers.find()) {
